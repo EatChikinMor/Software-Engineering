@@ -37,7 +37,7 @@ namespace DataHelpers
             }
         }
 
-        public DataTable GetAvailableSections(int EventID, int Level, int SectionCapacity = 625)
+        public DataTable GetUnavailableSections(int EventID, int Level, int SectionCapacity = 625)
         {
             DataTable dt = new DataTable();
 
@@ -53,6 +53,35 @@ namespace DataHelpers
                     sqlCommand.Parameters["@EventID"].Value = EventID;
                     sqlCommand.Parameters["@Level"].Value = Level;
                     sqlCommand.Parameters["@MaxSectionCount"].Value = SectionCapacity;
+
+                    using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlAdapter.Fill(dt);
+                    }
+
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable GetUnavailableRows(int EventID, int Level, string Section, int SectionCapacity = 25)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_Get_UnavailableRows", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.Add(new SqlParameter("@EventID", SqlDbType.Int));
+                    sqlCommand.Parameters.Add(new SqlParameter("@Level", SqlDbType.Int));
+                    sqlCommand.Parameters.Add(new SqlParameter("@Section", SqlDbType.NChar));
+                    sqlCommand.Parameters.Add(new SqlParameter("@MaxRowCapacity", SqlDbType.Int));
+                    sqlCommand.Parameters["@EventID"].Value = EventID;
+                    sqlCommand.Parameters["@Level"].Value = Level;
+                    sqlCommand.Parameters["@Section"].Value = Section;
+                    sqlCommand.Parameters["@MaxRowCapacity"].Value = SectionCapacity;
 
                     using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand))
                     {

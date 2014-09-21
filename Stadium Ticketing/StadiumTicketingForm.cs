@@ -16,29 +16,23 @@ namespace Stadium_Ticketing
 {
     public partial class frmTicketing : Form
     {
+        #region Class Level Variables
+
         private Ticketing _TDH = new Ticketing();
 
         private DataTable _EventTable = new DataTable();
+
+        private DataRow _Event = new DataRow();
+
+        #endregion
 
         public frmTicketing()
         {
             InitializeComponent();
 
-            _EventTable = _TDH.GetEvents();
+            ddlEvent_Populate();
 
-            List<Tuple<int, string>> Events = new List<Tuple<int,string>>();
-            for (int i = 0; i < _EventTable.Rows.Count + 1; i++)
-            {
-
-
-                ComboboxItem item = new ComboboxItem();             //Zeroes for testing, Replace with i 
-                                            //i                                              //i
-                item.Text = _EventTable.Rows[0]["Name"].ToString() + " - " + _EventTable.Rows[0]["Date"].ToString();
-                                            //i
-                item.Value = _EventTable.Rows[0]["ID"].ToString();
-
-                ddlEvent.Items.Add(item);
-            }
+            lblTicketPrice.Text = lblTax.Text = lblTotal.Text = "";
         }
 
         private void frmTicketing_Load(object sender, EventArgs e)
@@ -46,21 +40,21 @@ namespace Stadium_Ticketing
 
         }
 
-        #region Dropdown Flow
+        #region Dropdown Event Flow
 
         private void ddlEvent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DataRow Row = _EventTable.AsEnumerable().Where(row => row["ID"].ToString() == (((ComboboxItem)ddlEvent.SelectedItem).Value)).FirstOrDefault();
+            _Event = _EventTable.AsEnumerable().Where(row => row["ID"].ToString() == (((ComboboxItem)ddlEvent.SelectedItem).Value)).FirstOrDefault();
 
-            if (Convert.ToBoolean(Row["Floor"].ToString()))
+            if (Convert.ToBoolean(_Event["Floor"].ToString()))
             {
                 ddlLevel.Items.Add("Floor");
             }
-            if (Convert.ToBoolean(Row["Level1"].ToString()))
+            if (Convert.ToBoolean(_Event["Level1"].ToString()))
             {
                 ddlLevel.Items.Add("Level 1");
             }
-            if (Convert.ToBoolean(Row["Level2"].ToString()))
+            if (Convert.ToBoolean(_Event["Level2"].ToString()))
             {
                 ddlLevel.Items.Add("Level 2");
             }
@@ -87,21 +81,31 @@ namespace Stadium_Ticketing
 
             #endregion
 
-            DataTable dt = _TDH.GetAvailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
+            DataTable dt = _TDH.GetUnavailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
 
-
+            //Remove Full Sections
             foreach (DataRow row in dt.Rows)
             {
                 ddlSection.Items.Remove(row["Section"]);
             }
 
             ddlSection.Enabled = true;
+            ddlRow.Enabled = false;
         }
 
         private void ddlSection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Get Available Rows
-            //Populate ddlRow
+            for (int i = 0; i < 25; i++ )
+            {
+                ddlRow.Items.Add(i);
+            }
+
+            DataTable dt = _TDH.GetUnavailableRows(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString());
+
+            foreach (DataRow row in dt.Rows)
+            {
+                ddlRow.Items.Remove(Convert.ToInt32(row["Row"]));
+            }
 
             ddlRow.Enabled = true;
         }
@@ -115,7 +119,31 @@ namespace Stadium_Ticketing
 
         private void ddlEvent_Populate()
         {
-            
+            _EventTable = _TDH.GetEvents();
+
+            List<Tuple<int, string>> Events = new List<Tuple<int, string>>();
+            for (int i = 0; i < _EventTable.Rows.Count + 1; i++)
+            {                                 //Remove + 1
+
+
+                ComboboxItem item = new ComboboxItem();             //Zeroes for testing, Replace with i and remove + 1 in for loop
+                //i                                              //i
+                item.Text = _EventTable.Rows[0]["Name"].ToString() + " - " + _EventTable.Rows[0]["Date"].ToString();
+                //i
+                item.Value = _EventTable.Rows[0]["ID"].ToString();
+
+                ddlEvent.Items.Add(item);
+            }
         }
+
+        private Decimal GenerateTicketPrice(decimal BasePrice, int LevelIndex, char Section, int Row)
+        {
+            Decimal price = new Decimal();
+
+            price = BasePrice + (375 - ((LevelIndex * 125) + ((Section * 25) - (Row - 25))));
+
+            return Math.Round(price, 2);
+        }
+
     }
 }
