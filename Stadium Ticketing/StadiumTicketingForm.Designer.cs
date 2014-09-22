@@ -49,7 +49,7 @@
             this.ddlExpMonth = new System.Windows.Forms.ComboBox();
             this.lblExpiration = new System.Windows.Forms.Label();
             this.ddlExpYear = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnPurchase = new System.Windows.Forms.Button();
             this.lnkAdminLogin = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
@@ -130,6 +130,7 @@
             this.ddlRow.Name = "ddlRow";
             this.ddlRow.Size = new System.Drawing.Size(95, 22);
             this.ddlRow.TabIndex = 6;
+            this.ddlRow.SelectedIndexChanged += new System.EventHandler(this.ddlRow_SelectedIndexChanged);
             // 
             // lblReturn
             // 
@@ -234,6 +235,7 @@
             this.ddlExpMonth.Name = "ddlExpMonth";
             this.ddlExpMonth.Size = new System.Drawing.Size(52, 22);
             this.ddlExpMonth.TabIndex = 18;
+            this.ddlExpMonth.SelectedIndexChanged += new System.EventHandler(this.ddlExpMonth_SelectedIndexChanged);
             // 
             // lblExpiration
             // 
@@ -252,17 +254,19 @@
             this.ddlExpYear.Name = "ddlExpYear";
             this.ddlExpYear.Size = new System.Drawing.Size(69, 22);
             this.ddlExpYear.TabIndex = 20;
+            this.ddlExpYear.SelectedIndexChanged += new System.EventHandler(this.ddlExpYear_SelectedIndexChanged);
             // 
-            // button1
+            // btnPurchase
             // 
-            this.button1.Enabled = false;
-            this.button1.Font = new System.Drawing.Font("Calibri", 14F);
-            this.button1.Location = new System.Drawing.Point(477, 182);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 37);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Purchase";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnPurchase.Enabled = false;
+            this.btnPurchase.Font = new System.Drawing.Font("Calibri", 14F);
+            this.btnPurchase.Location = new System.Drawing.Point(477, 182);
+            this.btnPurchase.Name = "btnPurchase";
+            this.btnPurchase.Size = new System.Drawing.Size(121, 37);
+            this.btnPurchase.TabIndex = 21;
+            this.btnPurchase.Text = "Purchase";
+            this.btnPurchase.UseVisualStyleBackColor = true;
+            this.btnPurchase.Click += new System.EventHandler(this.btnPurchase_Click);
             // 
             // lnkAdminLogin
             // 
@@ -283,7 +287,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 231);
             this.Controls.Add(this.lnkAdminLogin);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnPurchase);
             this.Controls.Add(this.ddlExpYear);
             this.Controls.Add(this.lblExpiration);
             this.Controls.Add(this.ddlExpMonth);
@@ -338,7 +342,7 @@
         private System.Windows.Forms.ComboBox ddlExpMonth;
         private System.Windows.Forms.Label lblExpiration;
         private System.Windows.Forms.ComboBox ddlExpYear;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnPurchase;
         private System.Windows.Forms.LinkLabel lnkAdminLogin;
 
     }
