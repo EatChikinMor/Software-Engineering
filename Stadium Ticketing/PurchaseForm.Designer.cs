@@ -51,6 +51,8 @@
             this.ddlExpYear = new System.Windows.Forms.ComboBox();
             this.btnPurchase = new System.Windows.Forms.Button();
             this.lnkAdminLogin = new System.Windows.Forms.LinkLabel();
+            this.lblSeat = new System.Windows.Forms.Label();
+            this.ddlSeat = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // ddlEvent
@@ -96,7 +98,7 @@
             // 
             this.lblSection.AutoSize = true;
             this.lblSection.Font = new System.Drawing.Font("Calibri", 14F);
-            this.lblSection.Location = new System.Drawing.Point(115, 72);
+            this.lblSection.Location = new System.Drawing.Point(109, 72);
             this.lblSection.Name = "lblSection";
             this.lblSection.Size = new System.Drawing.Size(67, 23);
             this.lblSection.TabIndex = 5;
@@ -108,7 +110,7 @@
             this.ddlSection.FormattingEnabled = true;
             this.ddlSection.Location = new System.Drawing.Point(113, 98);
             this.ddlSection.Name = "ddlSection";
-            this.ddlSection.Size = new System.Drawing.Size(95, 22);
+            this.ddlSection.Size = new System.Drawing.Size(55, 22);
             this.ddlSection.TabIndex = 4;
             this.ddlSection.SelectedIndexChanged += new System.EventHandler(this.ddlSection_SelectedIndexChanged);
             // 
@@ -116,7 +118,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Calibri", 14F);
-            this.label1.Location = new System.Drawing.Point(216, 72);
+            this.label1.Location = new System.Drawing.Point(182, 72);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 23);
             this.label1.TabIndex = 7;
@@ -126,9 +128,9 @@
             // 
             this.ddlRow.Enabled = false;
             this.ddlRow.FormattingEnabled = true;
-            this.ddlRow.Location = new System.Drawing.Point(214, 98);
+            this.ddlRow.Location = new System.Drawing.Point(178, 98);
             this.ddlRow.Name = "ddlRow";
-            this.ddlRow.Size = new System.Drawing.Size(95, 22);
+            this.ddlRow.Size = new System.Drawing.Size(58, 22);
             this.ddlRow.TabIndex = 6;
             this.ddlRow.SelectedIndexChanged += new System.EventHandler(this.ddlRow_SelectedIndexChanged);
             // 
@@ -136,7 +138,7 @@
             // 
             this.lblReturn.AutoSize = true;
             this.lblReturn.Font = new System.Drawing.Font("Calibri", 12F);
-            this.lblReturn.Location = new System.Drawing.Point(14, 165);
+            this.lblReturn.Location = new System.Drawing.Point(61, 165);
             this.lblReturn.Name = "lblReturn";
             this.lblReturn.Size = new System.Drawing.Size(175, 19);
             this.lblReturn.TabIndex = 8;
@@ -144,7 +146,7 @@
             // 
             // btnReturns
             // 
-            this.btnReturns.Location = new System.Drawing.Point(55, 187);
+            this.btnReturns.Location = new System.Drawing.Point(102, 187);
             this.btnReturns.Name = "btnReturns";
             this.btnReturns.Size = new System.Drawing.Size(88, 23);
             this.btnReturns.TabIndex = 9;
@@ -281,11 +283,33 @@
             this.lnkAdminLogin.VisitedLinkColor = System.Drawing.Color.Black;
             this.lnkAdminLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAdminLogin_LinkClicked);
             // 
+            // lblSeat
+            // 
+            this.lblSeat.AutoSize = true;
+            this.lblSeat.Font = new System.Drawing.Font("Calibri", 14F);
+            this.lblSeat.Location = new System.Drawing.Point(248, 72);
+            this.lblSeat.Name = "lblSeat";
+            this.lblSeat.Size = new System.Drawing.Size(43, 23);
+            this.lblSeat.TabIndex = 24;
+            this.lblSeat.Text = "Seat";
+            // 
+            // ddlSeat
+            // 
+            this.ddlSeat.Enabled = false;
+            this.ddlSeat.FormattingEnabled = true;
+            this.ddlSeat.Location = new System.Drawing.Point(252, 98);
+            this.ddlSeat.Name = "ddlSeat";
+            this.ddlSeat.Size = new System.Drawing.Size(56, 22);
+            this.ddlSeat.TabIndex = 23;
+            this.ddlSeat.SelectedIndexChanged += new System.EventHandler(this.ddlSeat_SelectedIndexChanged);
+            // 
             // frmTicketing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 231);
+            this.Controls.Add(this.lblSeat);
+            this.Controls.Add(this.ddlSeat);
             this.Controls.Add(this.lnkAdminLogin);
             this.Controls.Add(this.btnPurchase);
             this.Controls.Add(this.ddlExpYear);
@@ -344,6 +368,8 @@
         private System.Windows.Forms.ComboBox ddlExpYear;
         private System.Windows.Forms.Button btnPurchase;
         private System.Windows.Forms.LinkLabel lnkAdminLogin;
+        private System.Windows.Forms.Label lblSeat;
+        private System.Windows.Forms.ComboBox ddlSeat;
 
     }
 }

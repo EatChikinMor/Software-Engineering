@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataHelpers.Objects
+{
+    public class Ticket
+    {
+        public Guid TicketNo { get; set; }
+
+        public Int32 EventID { get; set; }
+
+        public Int32 Level { get; set; }
+
+        public Char Section { get; set; }
+
+        public Int32 Row { get; set; }
+
+        public Int32 Seat { get; set; }
+    }
+}
