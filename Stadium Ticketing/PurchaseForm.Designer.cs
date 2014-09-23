@@ -81,7 +81,7 @@
             this.ddlLevel.Location = new System.Drawing.Point(12, 98);
             this.ddlLevel.Name = "ddlLevel";
             this.ddlLevel.Size = new System.Drawing.Size(95, 22);
-            this.ddlLevel.TabIndex = 2;
+            this.ddlLevel.TabIndex = 1;
             this.ddlLevel.SelectedIndexChanged += new System.EventHandler(this.ddlLevel_SelectedIndexChanged);
             // 
             // lblLevel
@@ -111,7 +111,7 @@
             this.ddlSection.Location = new System.Drawing.Point(113, 98);
             this.ddlSection.Name = "ddlSection";
             this.ddlSection.Size = new System.Drawing.Size(55, 22);
-            this.ddlSection.TabIndex = 4;
+            this.ddlSection.TabIndex = 2;
             this.ddlSection.SelectedIndexChanged += new System.EventHandler(this.ddlSection_SelectedIndexChanged);
             // 
             // label1
@@ -131,7 +131,7 @@
             this.ddlRow.Location = new System.Drawing.Point(178, 98);
             this.ddlRow.Name = "ddlRow";
             this.ddlRow.Size = new System.Drawing.Size(58, 22);
-            this.ddlRow.TabIndex = 6;
+            this.ddlRow.TabIndex = 3;
             this.ddlRow.SelectedIndexChanged += new System.EventHandler(this.ddlRow_SelectedIndexChanged);
             // 
             // lblReturn
@@ -218,7 +218,7 @@
             this.txtCreditCard.Location = new System.Drawing.Point(334, 141);
             this.txtCreditCard.Name = "txtCreditCard";
             this.txtCreditCard.Size = new System.Drawing.Size(265, 22);
-            this.txtCreditCard.TabIndex = 16;
+            this.txtCreditCard.TabIndex = 5;
             // 
             // lblCreditCard
             // 
@@ -236,7 +236,7 @@
             this.ddlExpMonth.Location = new System.Drawing.Point(334, 185);
             this.ddlExpMonth.Name = "ddlExpMonth";
             this.ddlExpMonth.Size = new System.Drawing.Size(52, 22);
-            this.ddlExpMonth.TabIndex = 18;
+            this.ddlExpMonth.TabIndex = 6;
             this.ddlExpMonth.SelectedIndexChanged += new System.EventHandler(this.ddlExpMonth_SelectedIndexChanged);
             // 
             // lblExpiration
@@ -255,7 +255,7 @@
             this.ddlExpYear.Location = new System.Drawing.Point(392, 185);
             this.ddlExpYear.Name = "ddlExpYear";
             this.ddlExpYear.Size = new System.Drawing.Size(69, 22);
-            this.ddlExpYear.TabIndex = 20;
+            this.ddlExpYear.TabIndex = 7;
             this.ddlExpYear.SelectedIndexChanged += new System.EventHandler(this.ddlExpYear_SelectedIndexChanged);
             // 
             // btnPurchase
@@ -265,7 +265,7 @@
             this.btnPurchase.Location = new System.Drawing.Point(477, 182);
             this.btnPurchase.Name = "btnPurchase";
             this.btnPurchase.Size = new System.Drawing.Size(121, 37);
-            this.btnPurchase.TabIndex = 21;
+            this.btnPurchase.TabIndex = 8;
             this.btnPurchase.Text = "Purchase";
             this.btnPurchase.UseVisualStyleBackColor = true;
             this.btnPurchase.Click += new System.EventHandler(this.btnPurchase_Click);
@@ -277,7 +277,7 @@
             this.lnkAdminLogin.Location = new System.Drawing.Point(249, 210);
             this.lnkAdminLogin.Name = "lnkAdminLogin";
             this.lnkAdminLogin.Size = new System.Drawing.Size(114, 14);
-            this.lnkAdminLogin.TabIndex = 22;
+            this.lnkAdminLogin.TabIndex = 10;
             this.lnkAdminLogin.TabStop = true;
             this.lnkAdminLogin.Text = "Administrator Login";
             this.lnkAdminLogin.VisitedLinkColor = System.Drawing.Color.Black;
@@ -300,7 +300,7 @@
             this.ddlSeat.Location = new System.Drawing.Point(252, 98);
             this.ddlSeat.Name = "ddlSeat";
             this.ddlSeat.Size = new System.Drawing.Size(56, 22);
-            this.ddlSeat.TabIndex = 23;
+            this.ddlSeat.TabIndex = 4;
             this.ddlSeat.SelectedIndexChanged += new System.EventHandler(this.ddlSeat_SelectedIndexChanged);
             // 
             // frmTicketing

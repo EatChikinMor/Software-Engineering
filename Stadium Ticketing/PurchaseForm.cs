@@ -184,6 +184,7 @@ namespace Stadium_Ticketing
 
         private void ddlExpMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddlExpYear.Items.Clear();
             if (ddlExpMonth.SelectedValue != String.Empty)
             {
                 ddlExpYear.Enabled = true;
@@ -221,8 +222,21 @@ namespace Stadium_Ticketing
                         Section = Convert.ToChar(ddlSection.SelectedItem.ToString()),
                         Seat = Convert.ToInt32(ddlSeat.SelectedItem.ToString())
                     };
+                    int count = 0;
 
-                    _TDH.GenerateTicket(ticket);
+                    string orderNumber = _TDH.GenerateTicket(ticket, ref count);
+
+                    if ( count > 1)
+                    {
+                        MessageBox.Show(String.Format("{0} Tickets Affected", count));
+                    }
+
+                    //MessageBox.Show("Implement Purchase Confirm Screen");
+
+                    string LastFour = txtCreditCard.ToString();
+                    PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticket.TicketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}",LastFour.Substring(LastFour.Length - 4, 4)));
+                    //PurchaseConfirm confirm = new PurchaseConfirm();
+                    confirm.ShowDialog();
                 }
             }
             else
