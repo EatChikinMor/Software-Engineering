@@ -224,18 +224,19 @@ namespace Stadium_Ticketing
                     };
                     int count = 0;
 
+                    string LastFour = txtCreditCard.ToString().Substring(txtCreditCard.ToString().Length - 4, 4);
+
                     string orderNumber = _TDH.GenerateTicket(ticket, ref count);
+
+                    _TDH.GenerateOrder(ticket.TicketNo, orderNumber, LastFour);
 
                     if ( count > 1)
                     {
-                        MessageBox.Show(String.Format("{0} Tickets Affected", count));
+                        MessageBox.Show(String.Format("Error:{0} Tickets Affected. Look into issue", count));
                     }
 
-                    //MessageBox.Show("Implement Purchase Confirm Screen");
+                    PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticket.TicketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}", LastFour));
 
-                    string LastFour = txtCreditCard.ToString();
-                    PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticket.TicketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}",LastFour.Substring(LastFour.Length - 4, 4)));
-                    //PurchaseConfirm confirm = new PurchaseConfirm();
                     confirm.ShowDialog();
                 }
             }

@@ -123,7 +123,7 @@ namespace DataHelpers
             }
         }
 
-        public void GenerateTicket(Ticket ticket)
+        public string GenerateTicket(Ticket ticket, ref int rowCount)
         {
             StringBuilder OrderNumber = new StringBuilder();
             Random rand = new Random();
@@ -152,6 +152,7 @@ namespace DataHelpers
                     sqlCommand.Parameters.Add(new SqlParameter("@Row", SqlDbType.Int));
                     sqlCommand.Parameters.Add(new SqlParameter("@Seat", SqlDbType.Int));
                     sqlCommand.Parameters.Add(new SqlParameter("@OrderNumber", SqlDbType.NVarChar));
+                    sqlCommand.Parameters.Add(new SqlParameter("@ReturnValue", SqlDbType.Int));
                     sqlCommand.Parameters["@TicketNumber"].Value = ticket.TicketNo;
                     sqlCommand.Parameters["@EventID"].Value = ticket.EventID;
                     sqlCommand.Parameters["@Level"].Value = ticket.Level;
@@ -159,6 +160,31 @@ namespace DataHelpers
                     sqlCommand.Parameters["@Row"].Value = ticket.Row;
                     sqlCommand.Parameters["@Seat"].Value = ticket.Seat;
                     sqlCommand.Parameters["@OrderNumber"].Value = OrderNumber.ToString();
+                    sqlCommand.Parameters["@ReturnValue"].Direction = ParameterDirection.ReturnValue;
+
+                    sqlCommand.ExecuteNonQuery();
+
+                    rowCount = Convert.ToInt32(sqlCommand.Parameters["@ReturnValue"].Value);
+
+                    return OrderNumber.ToString();
+                }
+            }
+        }
+
+        public void GenerateOrder(Guid ticketNo, string OrderNumber, string cardLastFour)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_Insert_Order", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.Add(new SqlParameter("@TicketNumber", SqlDbType.UniqueIdentifier));
+                    sqlCommand.Parameters.Add(new SqlParameter("@OrderNumber", SqlDbType.NChar));
+                    sqlCommand.Parameters.Add(new SqlParameter("@LastFour", SqlDbType.NChar));
+                    sqlCommand.Parameters["@TicketNumber"].Value = ticketNo;
+                    sqlCommand.Parameters["@OrderNumber"].Value = OrderNumber;
+                    sqlCommand.Parameters["@LastFour"].Value = cardLastFour;
 
                     sqlCommand.ExecuteNonQuery();
                 }
