@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Stadium_Ticketing
@@ -18,12 +11,9 @@ namespace Stadium_Ticketing
             lblCard.Text = CardNumber;
             lblOrderNumber.Text = OrderNumber;
             lblTicketNumber.Text = TicketNumber;
-
         }
 
         private void PurchaseConfirm_Load(object sender, EventArgs e)
-        {
-
-        }
+        {}
     }
 }
