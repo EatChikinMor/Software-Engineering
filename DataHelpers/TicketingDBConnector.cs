@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DataHelpers
 {
-    public class Ticketing
+    public class TicketingDBConnector
     {
         string _TicketingConnection = ConfigurationManager.ConnectionStrings["Ticketing"].ToString();
 
@@ -88,7 +88,7 @@ namespace DataHelpers
             }
         }
 
-        public DataTable GetUnavailableSeats(int EventID, int Level, string Section, int Row)
+        public DataTable GetUnavailableSeats(int EventID, int Level, char Section, int Row)
         {
             DataTable dt = new DataTable();
 

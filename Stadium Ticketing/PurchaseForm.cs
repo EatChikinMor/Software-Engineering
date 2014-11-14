@@ -12,12 +12,13 @@ namespace Stadium_Ticketing
     {
         #region Class Level Variables
 
-        private Ticketing _TDH = new Ticketing();
+        private PurchasingController _PC = new PurchasingController();
+
+        private TicketingDBConnector _TDH = new TicketingDBConnector();
 
         private static DataTable _EventTable = new DataTable();
 
-        Event _Event;
-
+        private static string[] _sections = new string[10] {"A","B","C","D","E","F","G","H","I","J"};
 
         #endregion
 
@@ -37,11 +38,8 @@ namespace Stadium_Ticketing
             lblTicketPrice.Text = lblTax.Text = lblTotal.Text = "";
         }
 
-        private void frmTicketing_Load(object sender, EventArgs e)
-        {}
-
         #region Dropdown Event Flow
-
+        
         private void ddlEvent_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlLevel.ResetText();
@@ -52,114 +50,40 @@ namespace Stadium_Ticketing
             ddlRow.Items.Clear();
             ddlRow.ResetText();
             ddlSeat.Items.Clear();
+
             DataRow Row = _EventTable.AsEnumerable().Where(row => row["ID"].ToString() == (((ComboboxItem)ddlEvent.SelectedItem).Value)).FirstOrDefault();
 
-            _Event = new Event()
-            {
-                ID = Convert.ToInt32(Row["ID"].ToString()),
-                Name = Row["Name"].ToString(),
-                Date = Convert.ToDateTime(Row["Date"].ToString()),
-                Floor = Convert.ToBoolean(Row["Floor"].ToString()),
-                Level1 = Convert.ToBoolean(Row["Level1"].ToString()),
-                Level2 = Convert.ToBoolean(Row["Level2"].ToString()),
-                BasePrice = Convert.ToDecimal(Row["BasePrice"].ToString()),
-                MaxPrice = Convert.ToDecimal(Row["MaxPrice"].ToString())
-            };
+            _PC.buildEvent(Row);
 
-            if (_Event.Floor)
+            Event Event = _PC.buildEvent(Row);
+
+            if (Event.Floor)
             {
                 ddlLevel.Items.Add("Floor");
             }
-            if (_Event.Level1)
+            if (Event.Level1)
             {
                 ddlLevel.Items.Add("Level 1");
             }
-            if (_Event.Level2)
+            if (Event.Level2)
             {
                 ddlLevel.Items.Add("Level 2");
             }
 
+            foreach (string section in _sections)
+            {
+                ddlSection.Items.Add(section);
+            }
+
+            for (int i = 1; i < 26; i++)
+            {
+                ddlRow.Items.Add(i);
+            }
+
             ddlLevel.Enabled = true;
-            ddlSection.Enabled = false;
-            ddlRow.Enabled = false;
+            ddlSection.Enabled = true;
+            ddlRow.Enabled = true;
             ddlSeat.Enabled = false;
-        }
-
-        private void ddlLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!ddlSeat.Enabled)
-            {
-                ddlSection.Items.Clear();
-                ddlRow.Items.Clear();
-                ddlSeat.Items.Clear();
-
-                #region Populate all
-
-                ddlSection.Items.Add("A");
-                ddlSection.Items.Add("B");
-                ddlSection.Items.Add("C");
-                ddlSection.Items.Add("D");
-                ddlSection.Items.Add("E");
-                ddlSection.Items.Add("F");
-                ddlSection.Items.Add("G");
-                ddlSection.Items.Add("H");
-                ddlSection.Items.Add("I");
-                ddlSection.Items.Add("J");
-
-                #endregion
-
-                DataTable dt = _TDH.GetUnavailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
-
-                //Remove Full Sections
-                foreach (DataRow row in dt.Rows)
-                {
-                    ddlSection.Items.Remove(row["Section"]);
-                }
-
-                ddlSection.Enabled = true;
-                ddlRow.Enabled = false;
-                ddlSeat.Enabled = false;
-            }
-            else
-            {
-                Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
-                tax = Math.Round((ticketPrice * 0.08m), 2);
-                lblTicketPrice.Text = ticketPrice.ToString();
-                lblTax.Text = tax.ToString();
-                lblTotal.Text = (ticketPrice + tax).ToString();
-            }
-        }
-
-        private void ddlSection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!ddlSeat.Enabled)
-            {
-                ddlRow.Items.Clear();
-                ddlSeat.Items.Clear();
-
-                for (int i = 1; i < 26; i++)
-                {
-                    ddlRow.Items.Add(i);
-                }
-
-                DataTable dt = _TDH.GetUnavailableRows(_Event.ID, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString());
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    ddlRow.Items.Remove(Convert.ToInt32(row["Row"]));
-                }
-
-                ddlRow.Enabled = true;
-                ddlSeat.Enabled = false;
-            }
-            else
-            {
-                Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
-                tax = Math.Round((ticketPrice * 0.08m), 2);
-                lblTicketPrice.Text = ticketPrice.ToString();
-                lblTax.Text = tax.ToString();
-                lblTotal.Text = (ticketPrice + tax).ToString();
-            }
         }
 
         private void ddlRow_SelectedIndexChanged(object sender, EventArgs e)
@@ -167,23 +91,19 @@ namespace Stadium_Ticketing
             if (!ddlSeat.Enabled)
             {
                 ddlSeat.Items.Clear();
-                for (int i = 1; i < 26; i++)
-                {
-                    ddlSeat.Items.Add(i);
-                }
 
-                DataTable dt = _TDH.GetUnavailableSeats(_Event.ID, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), (int)ddlRow.SelectedItem);
+                int[] seats = _PC.getSeats(ddlLevel.SelectedIndex, Convert.ToChar(ddlSection.SelectedIndex.ToString()), Convert.ToInt32(ddlRow.SelectedItem));
 
-                foreach (DataRow row in dt.Rows)
+                foreach (int seat in seats)
                 {
-                    ddlSeat.Items.Remove(Convert.ToInt32(row["Seat"]));
+                    ddlSeat.Items.Add(seat);
                 }
 
                 ddlSeat.Enabled = true;
             }
-            else
+            else if (ddlSeat.SelectedItem != null)
             {
-                Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+                Decimal ticketPrice = _PC.GenerateTicketPrice(ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
                 tax = Math.Round((ticketPrice * 0.08m), 2);
                 lblTicketPrice.Text = ticketPrice.ToString();
                 lblTax.Text = tax.ToString();
@@ -193,7 +113,7 @@ namespace Stadium_Ticketing
 
         private void ddlSeat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+            Decimal ticketPrice = _PC.GenerateTicketPrice(ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
             tax = Math.Round((ticketPrice * 0.08m), 2);
             lblTicketPrice.Text = ticketPrice.ToString();
             lblTax.Text = tax.ToString();
@@ -207,7 +127,7 @@ namespace Stadium_Ticketing
         private void ddlExpMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlExpYear.Items.Clear();
-            if (ddlExpMonth.SelectedValue != String.Empty)
+            if ((string)ddlExpMonth.SelectedValue != String.Empty)
             {
                 ddlExpYear.Enabled = true;
 
@@ -229,35 +149,29 @@ namespace Stadium_Ticketing
 
         private void btnPurchase_Click(object sender, EventArgs e)
         {
-            if (cardCheck(txtCreditCard.Text))
+            if (_PC.cardCheck(txtCreditCard.Text))
             {
                 DateTime Expiration = new DateTime(Convert.ToInt32(ddlExpYear.SelectedItem), Convert.ToInt32(ddlExpMonth.SelectedItem), 1);
 
                 if (Expiration.AddMonths(1) > DateTime.Now)
                 {
-                    Ticket ticket = new Ticket()
-                    {
-                        TicketNo = Guid.NewGuid(),
-                        EventID = _Event.ID,
-                        Level = ddlLevel.SelectedIndex,
-                        Row = Convert.ToInt32(ddlRow.SelectedItem.ToString()),
-                        Section = Convert.ToChar(ddlSection.SelectedItem.ToString()),
-                        Seat = Convert.ToInt32(ddlSeat.SelectedItem.ToString())
-                    };
-                    int count = 0;
+                    //
+                    //
+                    string orderNumber = "", 
+                    LastFour = txtCreditCard.ToString().Substring(txtCreditCard.ToString().Length - 4, 4);;
 
-                    string LastFour = txtCreditCard.ToString().Substring(txtCreditCard.ToString().Length - 4, 4);
+                    Guid ticketNo = _PC.SubmitOrder
+                                    (
+                                        ddlLevel.SelectedIndex,
+                                        Convert.ToChar(ddlSection.SelectedItem.ToString()),
+                                        Convert.ToInt32(ddlRow.SelectedItem.ToString()),
+                                        Convert.ToInt32(ddlSeat.SelectedItem.ToString()),
+                                        LastFour,
+                                        ref orderNumber
 
-                    string orderNumber = _TDH.GenerateTicket(ticket, ref count);
+                                    );
 
-                    _TDH.GenerateOrder(ticket.TicketNo, orderNumber, LastFour);
-
-                    if (count > 1)
-                    {
-                        MessageBox.Show(String.Format("Error:{0} Tickets Affected. Look into issue", count));
-                    }
-
-                    PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticket.TicketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}", LastFour));
+                    PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}", LastFour));
 
                     confirm.ShowDialog();
                 }
@@ -291,52 +205,88 @@ namespace Stadium_Ticketing
             }
         }
 
-        protected Decimal GenerateTicketPrice(decimal BasePrice, decimal MaxPrice, int LevelIndex, string Section, int Row)
+        #region Not Implemented
+        //Not Implemented
+        private void ddlLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Decimal price, increment;
+            //    if (!ddlSeat.Enabled)
+            //    {
+            //        ddlSection.Items.Clear();
+            //        ddlRow.Items.Clear();
+            //        ddlSeat.Items.Clear();
 
-            Dictionary<string, int> section = new Dictionary<string, int>()
-	        {
-	            {"A", 1},
-	            {"B", 1},
-	            {"C", 2},
-	            {"D", 2},
-                {"E", 3},
-                {"F", 3},
-                {"G", 4},
-                {"H", 4},
-                {"I", 5},
-                {"J", 5}
-	        };
+            //        #region Populate all
 
-            int seatPriceRange = (ddlLevel.Items.Count * section.Keys.Count * 25) / 2; //A = B, C = D etc, only require half the
-                                                                                      //tickets to be priced -> divide by two
+            //        ddlSection.Items.Add("A");
+            //        ddlSection.Items.Add("B");
+            //        ddlSection.Items.Add("C");
+            //        ddlSection.Items.Add("D");
+            //        ddlSection.Items.Add("E");
+            //        ddlSection.Items.Add("F");
+            //        ddlSection.Items.Add("G");
+            //        ddlSection.Items.Add("H");
+            //        ddlSection.Items.Add("I");
+            //        ddlSection.Items.Add("J");
 
-            increment = (MaxPrice - BasePrice) / (seatPriceRange - 1);
+            //        #endregion
 
-            BasePrice = BasePrice - increment;
+            //        DataTable dt = _TDH.GetUnavailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
 
-            //125x + 25(y-1) + z-1 => Alternate => 125x + 25y + z - 26
-            price = BasePrice + (increment * (seatPriceRange - ((125 * LevelIndex) + (25 * (section[Section] - 1)) + (Row - 1))));
+            //        //Remove Full Sections
+            //        foreach (DataRow row in dt.Rows)
+            //        {
+            //            ddlSection.Items.Remove(row["Section"]);
+            //        }
 
-            return Math.Round(price, 2);
+            //        ddlSection.Enabled = true;
+            //        ddlRow.Enabled = false;
+            //        ddlSeat.Enabled = false;
+            //    }
+            //    else
+            //    {
+            //        Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+            //        tax = Math.Round((ticketPrice * 0.08m), 2);
+            //        lblTicketPrice.Text = ticketPrice.ToString();
+            //        lblTax.Text = tax.ToString();
+            //        lblTotal.Text = (ticketPrice + tax).ToString();
+            //    }
         }
-
-        protected bool cardCheck(string creditCardNumber)
+        //Not Implemented
+        private void ddlSection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(creditCardNumber))
-            {
-                return false;
-            }
-            else if (creditCardNumber.Length > 19 || creditCardNumber.Length < 12)
-            {
-                return false;
-            }
+            //    if (!ddlSeat.Enabled)
+            //    {
+            //        ddlRow.Items.Clear();
+            //        ddlSeat.Items.Clear();
 
-            int sumOfDigits = creditCardNumber.Where((e) => e >= '0' && e <= '9').Reverse()
-                            .Select((e, i) => ((int)e - 48) * (i % 2 == 0 ? 1 : 2)).Sum((e) => e / 10 + e % 10);
+            //        for (int i = 1; i < 26; i++)
+            //        {
+            //            ddlRow.Items.Add(i);
+            //        }
 
-            return sumOfDigits % 10 == 0;
+            //        DataTable dt = _TDH.GetUnavailableRows(_Event.ID, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString());
+
+            //        foreach (DataRow row in dt.Rows)
+            //        {
+            //            ddlRow.Items.Remove(Convert.ToInt32(row["Row"]));
+            //        }
+
+            //        ddlRow.Enabled = true;
+            //        ddlSeat.Enabled = false;
+            //    }
+            //    else
+            //    {
+            //        Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+            //        tax = Math.Round((ticketPrice * 0.08m), 2);
+            //        lblTicketPrice.Text = ticketPrice.ToString();
+            //        lblTax.Text = tax.ToString();
+            //        lblTotal.Text = (ticketPrice + tax).ToString();
+            //    }
         }
+        //Not Implemented
+        private void frmTicketing_Load(object sender, EventArgs e)
+        { }
+        #endregion
+
     }
 }

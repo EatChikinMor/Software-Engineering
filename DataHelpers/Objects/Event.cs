@@ -19,6 +19,5 @@ namespace DataHelpers.Objects
         public Decimal BasePrice { get; set; }
 
         public Decimal MaxPrice { get; set; }
-
     }
 }
