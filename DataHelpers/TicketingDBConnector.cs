@@ -184,5 +184,32 @@ namespace DataHelpers
                 }
             }
         }
+
+        #region Code added by Judson for things he needs the DBC to do
+        public bool kill(string userName)
+        {
+            //temporary method until i figure out how to work with this DB
+            //updates DB to kill session associated with userName
+            return true;
+        }
+        public string getPass(string userName)
+        {
+            string mPass = "TemporaryPassword";
+            //execute query to set mPass based on userName -- get username's stored password from DB
+            return mPass;
+
+        }
+        public void setSession(string userName)
+        { 
+            //updates DB entry to create session based on userName
+            //some query here
+        }
+
+        public bool save(Event e)
+        {
+            //updates DB to include passed in Event from AddEventController
+            return true;
+        }
+        #endregion
     }
 }

@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddEventController.cs" />
+    <Compile Include="LoginController.cs" />
     <Compile Include="Objects\Event.cs" />
     <Compile Include="Objects\ComboboxItem.cs" />
     <Compile Include="Objects\Ticket.cs" />
