@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataHelpers.Objects;
 
+
 namespace DataHelpers
 {
     public class AddEventController
@@ -19,6 +20,8 @@ namespace DataHelpers
         {
             mEvent = new Event();
             mDBC = new TicketingDBConnector();
+            //AddEventForm mAEF = new AddEventForm();
+            //AddEventConfirmForm mAECF = new AddEventConfirmForm();
         }
 
         //addEvent takes AddEventForm info and saves it to database
@@ -48,6 +51,7 @@ namespace DataHelpers
             if (mDBC.save(mEvent))
             {
                 //show AddEventConfirmForm
+                //mAECF.show();
             }
             else
             { 
@@ -59,6 +63,13 @@ namespace DataHelpers
         public void close()
         { 
             //show addEventForm cleared of data
+            //mAEF.clear();
+            //mAEF.show();
+        }
+
+        public void show()
+        { 
+            //mAEF.show();
         }
     }
 }

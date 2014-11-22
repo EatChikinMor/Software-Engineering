@@ -13,7 +13,9 @@ namespace DataHelpers
         private string mPassword;
         private string Result;
         private int mDestination; //0=returns, 1=addEvent
-        private TicketingDBConnector mDBC;        
+        private TicketingDBConnector mDBC;
+        private AddEventController mAEC;
+        //private ReturnsController mRC;
         #endregion
 
         //constructor
@@ -41,6 +43,8 @@ namespace DataHelpers
                     case 1:
                         //destroy LoginForm
                         //show AddEventForm
+                        mAEC = new AddEventController();
+                        mAEC.show();
                         break;
                     default:
                         break;
@@ -50,7 +54,6 @@ namespace DataHelpers
             { 
                 //show LoginForm
             }
-
         }
         #endregion
 
@@ -85,6 +88,5 @@ namespace DataHelpers
                 return false;
         }
         #endregion
-
     }
 }

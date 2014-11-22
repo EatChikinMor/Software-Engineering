@@ -185,29 +185,90 @@ namespace DataHelpers
             }
         }
 
-        #region Code added by Judson for things he needs the DBC to do
+        #region Code added by Judson for things he needs the DBC to do - i have no idea if any of this actually works!
         public bool kill(string userName)
         {
-            //temporary method until i figure out how to work with this DB
             //updates DB to kill session associated with userName
+            //assuming table "session" with columns "userName", "dateTime", "sessionCurrent"
+            string query = "UPDATE session SET sessionCurrent = @killed WHERE userName = " + userName;
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add("@killed", SqlDbType.Bit).Value = false;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
             return true;
         }
         public string getPass(string userName)
         {
             string mPass = "TemporaryPassword";
             //execute query to set mPass based on userName -- get username's stored password from DB
+            //assuming table "users" with columns "user", "pass"
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM users WHERE user = " + userName, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        mPass = reader.GetString(reader.GetOrdinal("pass")); //i have no idea if this actually stores the password into mPass
+                    }
+                }
+                connection.Close();
+            }
             return mPass;
 
         }
         public void setSession(string userName)
         { 
             //updates DB entry to create session based on userName
-            //some query here
+            //assuming table "session" with columns "userName", "dateTime", "sessionCurrent"
+            DateTime mDate = DateTime.Now;
+
+            string query = "INSERT INTO session (userName, dateTime, sessionCurrent) VALUES (@userName, @dateTime, @session)";
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add("@userName", SqlDbType.NChar).Value = userName;
+                    command.Parameters.Add("@dateTime", SqlDbType.DateTime).Value = mDate;
+                    command.Parameters.Add("@session", SqlDbType.Bit).Value = true;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
         }
 
         public bool save(Event e)
         {
             //updates DB to include passed in Event from AddEventController
+            //assuming table "events" with columns "EventID", "Name", "Date", "Floor", "Level1", "Level2", "BasePrice", "MaxPrice"
+            string query = "INSERT INTO events (EventID, Name, Date, Floor, Level1, Level2, BasePrice, MaxPrice) VALUES (@EventID, @Name, @Date, @Floor, @Level1, @Level2, @BasePrice, @MaxPrice)";
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add("@EventID", SqlDbType.Int).Value = e.ID;
+                    command.Parameters.Add("@Name", SqlDbType.NChar).Value = e.Name;
+                    command.Parameters.Add("@Date", SqlDbType.DateTime).Value = e.Date;
+                    command.Parameters.Add("@Floor", SqlDbType.Bit).Value = e.Floor;
+                    command.Parameters.Add("@Level1", SqlDbType.Bit).Value = e.Level1;
+                    command.Parameters.Add("@Level2", SqlDbType.Bit).Value = e.Level2;
+                    command.Parameters.Add("@BasePrice", SqlDbType.Decimal).Value = e.BasePrice;
+                    command.Parameters.Add("@MaxPrice", SqlDbType.Decimal).Value = e.MaxPrice;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
             return true;
         }
         #endregion
