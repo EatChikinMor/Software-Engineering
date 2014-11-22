@@ -34,8 +34,24 @@ namespace Stadium_Ticketing
             {
                 ddlExpMonth.Items.Add(i);
             }
+            ddlExpYear.Enabled = false;
 
             lblTicketPrice.Text = lblTax.Text = lblTotal.Text = "";
+        }
+
+        private void ddlEvent_Populate()
+        {
+            _EventTable = _TDH.GetEvents();
+
+            List<Tuple<int, string>> Events = new List<Tuple<int, string>>();
+            for (int i = 0; i < _EventTable.Rows.Count; i++)
+            {
+                ComboboxItem item = new ComboboxItem();
+                item.Text = _EventTable.Rows[i]["Name"].ToString() + " - " + String.Format("{0:h tt MM/dd/yy}", Convert.ToDateTime(_EventTable.Rows[i]["Date"]));
+                item.Value = _EventTable.Rows[i]["ID"].ToString();
+
+                ddlEvent.Items.Add(item);
+            }
         }
 
         #region Dropdown Event Flow
@@ -51,7 +67,10 @@ namespace Stadium_Ticketing
             ddlRow.ResetText();
             ddlSeat.Items.Clear();
 
-            DataRow Row = _EventTable.AsEnumerable().Where(row => row["ID"].ToString() == (((ComboboxItem)ddlEvent.SelectedItem).Value)).FirstOrDefault();
+            DataRow Row = _EventTable
+                .AsEnumerable()
+                .Where(row => row["ID"].ToString() == (((ComboboxItem)ddlEvent.SelectedItem).Value))
+                .FirstOrDefault();
 
             _PC.buildEvent(Row);
 
@@ -86,6 +105,85 @@ namespace Stadium_Ticketing
             ddlSeat.Enabled = false;
         }
 
+        private void ddlLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ddlSeat.Enabled)
+            {
+                // Not Implemented
+                //        ddlSection.Items.Clear();
+                //        ddlRow.Items.Clear();
+                //        ddlSeat.Items.Clear();
+
+                //        #region Populate all
+
+                //        ddlSection.Items.Add("A");
+                //        ddlSection.Items.Add("B");
+                //        ddlSection.Items.Add("C");
+                //        ddlSection.Items.Add("D");
+                //        ddlSection.Items.Add("E");
+                //        ddlSection.Items.Add("F");
+                //        ddlSection.Items.Add("G");
+                //        ddlSection.Items.Add("H");
+                //        ddlSection.Items.Add("I");
+                //        ddlSection.Items.Add("J");
+
+                //        #endregion
+
+                //        DataTable dt = _TDH.GetUnavailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
+
+                //        //Remove Full Sections
+                //        foreach (DataRow row in dt.Rows)
+                //        {
+                //            ddlSection.Items.Remove(row["Section"]);
+                //        }
+
+                //        ddlSection.Enabled = true;
+                //        ddlRow.Enabled = false;
+                //        ddlSeat.Enabled = false;
+            }
+            else
+            {
+                Decimal ticketPrice = _PC.GenerateTicketPrice(ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+                tax = Math.Round((ticketPrice * 0.08m), 2);
+                lblTicketPrice.Text = ticketPrice.ToString();
+                lblTax.Text = tax.ToString();
+                lblTotal.Text = (ticketPrice + tax).ToString();
+            }
+        }
+
+        private void ddlSection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ddlSeat.Enabled)
+            {
+                // Not Implemented
+                //        ddlRow.Items.Clear();
+                //        ddlSeat.Items.Clear();
+
+                //        for (int i = 1; i < 26; i++)
+                //        {
+                //            ddlRow.Items.Add(i);
+                //        }
+
+                //        DataTable dt = _TDH.GetUnavailableRows(_Event.ID, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString());
+
+                //        foreach (DataRow row in dt.Rows)
+                //        {
+                //            ddlRow.Items.Remove(Convert.ToInt32(row["Row"]));
+                //        }
+
+                //        ddlRow.Enabled = true;
+                //        ddlSeat.Enabled = false;
+            }
+            else
+            {
+                Decimal ticketPrice = _PC.GenerateTicketPrice(ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
+                tax = Math.Round((ticketPrice * 0.08m), 2);
+                lblTicketPrice.Text = ticketPrice.ToString();
+                lblTax.Text = tax.ToString();
+                lblTotal.Text = (ticketPrice + tax).ToString();
+            }
+        }
+
         private void ddlRow_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!ddlSeat.Enabled)
@@ -118,11 +216,15 @@ namespace Stadium_Ticketing
             lblTicketPrice.Text = ticketPrice.ToString();
             lblTax.Text = tax.ToString();
             lblTotal.Text = (ticketPrice + tax).ToString();
+            if (ddlExpYear.Enabled)
+            {
+                btnPurchase.Enabled = true;
+            }
         }
 
         #endregion
 
-        #region Purchase
+        #region Purchase Flow
 
         private void ddlExpMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -133,7 +235,7 @@ namespace Stadium_Ticketing
 
                 DateTime year = DateTime.Now;
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     ddlExpYear.Items.Add(year.AddYears(i).Year);
                 }
@@ -144,7 +246,10 @@ namespace Stadium_Ticketing
 
         private void ddlExpYear_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnPurchase.Enabled = true;
+            if ((Int32)ddlSeat.SelectedItem > 0)
+            {
+                btnPurchase.Enabled = true;
+            }
         }
 
         private void btnPurchase_Click(object sender, EventArgs e)
@@ -155,8 +260,6 @@ namespace Stadium_Ticketing
 
                 if (Expiration.AddMonths(1) > DateTime.Now)
                 {
-                    //
-                    //
                     string orderNumber = "", 
                     LastFour = txtCreditCard.ToString().Substring(txtCreditCard.ToString().Length - 4, 4);;
 
@@ -168,7 +271,6 @@ namespace Stadium_Ticketing
                                         Convert.ToInt32(ddlSeat.SelectedItem.ToString()),
                                         LastFour,
                                         ref orderNumber
-
                                     );
 
                     PurchaseConfirm confirm = new PurchaseConfirm(orderNumber, ticketNo.ToString(), String.Format("XXXX-XXXX-XXXX-{0}", LastFour));
@@ -185,108 +287,18 @@ namespace Stadium_Ticketing
 
         #endregion
 
+        #region Additional Functionality Navigation
+
         private void lnkAdminLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            //Navigate to Login
+            //Admin Login Form
         }
 
-        private void ddlEvent_Populate()
+        private void btnReturns_Click(object sender, EventArgs e)
         {
-            _EventTable = _TDH.GetEvents();
-
-            List<Tuple<int, string>> Events = new List<Tuple<int, string>>();
-            for (int i = 0; i < _EventTable.Rows.Count; i++)
-            {
-                ComboboxItem item = new ComboboxItem();
-                item.Text = _EventTable.Rows[i]["Name"].ToString() + " - " + _EventTable.Rows[i]["Date"].ToString();
-                item.Value = _EventTable.Rows[i]["ID"].ToString();
-
-                ddlEvent.Items.Add(item);
-            }
+            //User Returns Form
         }
 
-        #region Not Implemented
-        //Not Implemented
-        private void ddlLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //    if (!ddlSeat.Enabled)
-            //    {
-            //        ddlSection.Items.Clear();
-            //        ddlRow.Items.Clear();
-            //        ddlSeat.Items.Clear();
-
-            //        #region Populate all
-
-            //        ddlSection.Items.Add("A");
-            //        ddlSection.Items.Add("B");
-            //        ddlSection.Items.Add("C");
-            //        ddlSection.Items.Add("D");
-            //        ddlSection.Items.Add("E");
-            //        ddlSection.Items.Add("F");
-            //        ddlSection.Items.Add("G");
-            //        ddlSection.Items.Add("H");
-            //        ddlSection.Items.Add("I");
-            //        ddlSection.Items.Add("J");
-
-            //        #endregion
-
-            //        DataTable dt = _TDH.GetUnavailableSections(Convert.ToInt32(((ComboboxItem)ddlEvent.SelectedItem).Value), ddlLevel.SelectedIndex);
-
-            //        //Remove Full Sections
-            //        foreach (DataRow row in dt.Rows)
-            //        {
-            //            ddlSection.Items.Remove(row["Section"]);
-            //        }
-
-            //        ddlSection.Enabled = true;
-            //        ddlRow.Enabled = false;
-            //        ddlSeat.Enabled = false;
-            //    }
-            //    else
-            //    {
-            //        Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
-            //        tax = Math.Round((ticketPrice * 0.08m), 2);
-            //        lblTicketPrice.Text = ticketPrice.ToString();
-            //        lblTax.Text = tax.ToString();
-            //        lblTotal.Text = (ticketPrice + tax).ToString();
-            //    }
-        }
-        //Not Implemented
-        private void ddlSection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //    if (!ddlSeat.Enabled)
-            //    {
-            //        ddlRow.Items.Clear();
-            //        ddlSeat.Items.Clear();
-
-            //        for (int i = 1; i < 26; i++)
-            //        {
-            //            ddlRow.Items.Add(i);
-            //        }
-
-            //        DataTable dt = _TDH.GetUnavailableRows(_Event.ID, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString());
-
-            //        foreach (DataRow row in dt.Rows)
-            //        {
-            //            ddlRow.Items.Remove(Convert.ToInt32(row["Row"]));
-            //        }
-
-            //        ddlRow.Enabled = true;
-            //        ddlSeat.Enabled = false;
-            //    }
-            //    else
-            //    {
-            //        Decimal ticketPrice = GenerateTicketPrice(_Event.BasePrice, _Event.MaxPrice, ddlLevel.SelectedIndex, ddlSection.SelectedItem.ToString(), Convert.ToInt32(ddlRow.SelectedItem)),
-            //        tax = Math.Round((ticketPrice * 0.08m), 2);
-            //        lblTicketPrice.Text = ticketPrice.ToString();
-            //        lblTax.Text = tax.ToString();
-            //        lblTotal.Text = (ticketPrice + tax).ToString();
-            //    }
-        }
-        //Not Implemented
-        private void frmTicketing_Load(object sender, EventArgs e)
-        { }
         #endregion
-
     }
 }
