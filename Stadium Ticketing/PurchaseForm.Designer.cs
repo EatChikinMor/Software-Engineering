@@ -337,7 +337,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "frmTicketing";
             this.Text = "Stadium Ticketing";
-            this.Load += new System.EventHandler(this.frmTicketing_Load);
+            //this.Load += new System.EventHandler(this.frmTicketing_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -87,9 +87,6 @@
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PurchaseConfirm.resx">
-      <DependentUpon>PurchaseConfirm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="PurchaseForm.resx">
       <DependentUpon>PurchaseForm.cs</DependentUpon>
     </EmbeddedResource>

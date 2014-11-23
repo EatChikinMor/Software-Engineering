@@ -54,7 +54,7 @@
             this.btnClear.TabIndex = 0;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.button1_Click);
+            this.btnClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
             // btnAddEvent
             // 
@@ -109,7 +109,6 @@
             this.lblEventName.Size = new System.Drawing.Size(117, 13);
             this.lblEventName.TabIndex = 6;
             this.lblEventName.Text = "Enter new event name:";
-            this.lblEventName.Click += new System.EventHandler(this.label1_Click);
             // 
             // lblBasePrice
             // 
