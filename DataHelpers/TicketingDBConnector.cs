@@ -34,7 +34,7 @@ namespace DataHelpers
         }
 
         public DataTable GetUnavailableSections(int EventID, int Level, int SectionCapacity = 625)
-        {
+        { //Not Implemented
             DataTable dt = new DataTable();
 
             using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
@@ -61,7 +61,7 @@ namespace DataHelpers
         }
 
         public DataTable GetUnavailableRows(int EventID, int Level, string Section, int SectionCapacity = 25)
-        {
+        { //Not implemented
             DataTable dt = new DataTable();
 
             using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
@@ -250,38 +250,44 @@ namespace DataHelpers
             }
         }
 
-        public bool save(Event e)
-        {
+        public bool save(Event e) //**** It looks like you started to try what I had done. Mine are stored procedures where the code is handled database side.
+        {                         //**** In the database -> Programmability -> Stored Procedures. You can look at what I did by right clicking one and selecting
+                                  //**** Script As -> Create To -> New Window. After you look at it you can clear mine out and use it to write yours. 
+                                  //**** I've fixed to code below to work with one so that way you'll have less to sort out your first time.
+
             //updates DB to include passed in Event from AddEventController
             //assuming table "events" with columns "EventID", "Name", "Date", "Floor", "Level1", "Level2", "BasePrice", "MaxPrice"
-            try
+
+            //string query = "INSERT INTO events (EventID, Name, Date, Floor, Level1, Level2, BasePrice, MaxPrice) VALUES (@EventID, @Name, @Date, @Floor, @Level1, @Level2, @BasePrice, @MaxPrice)";
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
             {
-                string query = "INSERT INTO events (EventID, Name, Date, Floor, Level1, Level2, BasePrice, MaxPrice) VALUES (@EventID, @Name, @Date, @Floor, @Level1, @Level2, @BasePrice, @MaxPrice)";
-                using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+                connection.Open(); //The connection has to happen first for reasons I forget
+                using (SqlCommand command = new SqlCommand("Your Stored Procedure Name Here", connection))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.Add("@EventID", SqlDbType.Int).Value = e.ID;
-                        command.Parameters.Add("@Name", SqlDbType.NChar).Value = e.Name;
-                        command.Parameters.Add("@Date", SqlDbType.DateTime).Value = e.Date;
-                        command.Parameters.Add("@Floor", SqlDbType.Bit).Value = e.Floor;
-                        command.Parameters.Add("@Level1", SqlDbType.Bit).Value = e.Level1;
-                        command.Parameters.Add("@Level2", SqlDbType.Bit).Value = e.Level2;
-                        command.Parameters.Add("@BasePrice", SqlDbType.Decimal).Value = e.BasePrice;
-                        command.Parameters.Add("@MaxPrice", SqlDbType.Decimal).Value = e.MaxPrice;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@EventID", SqlDbType.Int));
+                    command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NChar));
+                    command.Parameters.Add(new SqlParameter("@Date", SqlDbType.DateTime));
+                    command.Parameters.Add(new SqlParameter("@Floor", SqlDbType.Bit));
+                    command.Parameters.Add(new SqlParameter("@Level1", SqlDbType.Bit));
+                    command.Parameters.Add(new SqlParameter("@Level2", SqlDbType.Bit));
+                    command.Parameters.Add(new SqlParameter("@BasePrice", SqlDbType.Decimal));
+                    command.Parameters.Add(new SqlParameter("@MaxPrice", SqlDbType.Decimal));
+                    //command.Parameters.Add("@EventID", SqlDbType.Int).Value = e.ID; // I'm not certain as to whether you can daisy chain the
+                                                                                        // addition to the parameter list and the value assignment.
+                    command.Parameters["@EventID"].Value = e.ID;
+                    command.Parameters["@Name"].Value = e.Name;
+                    command.Parameters["@Date"].Value = e.Date;
+                    command.Parameters["@Floor"].Value = e.Floor;
+                    command.Parameters["@Level1"].Value = e.Level1;
+                    command.Parameters["@Level2"].Value = e.Level2;
+                    command.Parameters["@BasePrice"].Value = e.BasePrice;
+                    command.Parameters["@MaxPrice"].Value = e.MaxPrice;
 
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        connection.Close();
-                    }
+                    command.ExecuteNonQuery();
+                    //connection.Close(); The using block will dispose of the connection for you
                 }
-
             }
-            catch (Exception)
-            {
-                //returning true for test purposes only, will return false otherwise
-                return true;
-            } 
             
             return true;
         }
