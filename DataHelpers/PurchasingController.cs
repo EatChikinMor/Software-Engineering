@@ -35,16 +35,6 @@ namespace DataHelpers
             return selectedEvent;
         }
 
-        //Judson added this in order to reuse the GenerateTicketPrice method in AddEventForm
-        public void setEvent (Event e)
-        {
-            selectedEvent = e;
-        }
-        public void clearEvent()
-        {
-            selectedEvent = new Event();
-        }
-
         public Decimal GenerateTicketPrice(int LevelIndex, string Section, int Row)
         {
             int Levels = 0;
