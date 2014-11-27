@@ -92,6 +92,7 @@
             this.tbxEventName.Name = "tbxEventName";
             this.tbxEventName.Size = new System.Drawing.Size(214, 20);
             this.tbxEventName.TabIndex = 4;
+            this.tbxEventName.TextChanged += new System.EventHandler(this.tbxEventName_TextChanged);
             // 
             // tbxBasePrice
             // 
@@ -100,6 +101,7 @@
             this.tbxBasePrice.Size = new System.Drawing.Size(214, 20);
             this.tbxBasePrice.TabIndex = 5;
             this.tbxBasePrice.TextChanged += new System.EventHandler(this.tbxBasePrice_TextChanged);
+            this.tbxBasePrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxBasePrice_KeyPress);
             // 
             // lblEventName
             // 
@@ -129,22 +131,28 @@
             // 
             // tbxFloorPrice
             // 
+            this.tbxFloorPrice.BackColor = System.Drawing.SystemColors.Window;
             this.tbxFloorPrice.Location = new System.Drawing.Point(140, 122);
             this.tbxFloorPrice.Name = "tbxFloorPrice";
+            this.tbxFloorPrice.ReadOnly = true;
             this.tbxFloorPrice.Size = new System.Drawing.Size(111, 20);
             this.tbxFloorPrice.TabIndex = 9;
             // 
             // tbxLevel2Price
             // 
+            this.tbxLevel2Price.BackColor = System.Drawing.SystemColors.Window;
             this.tbxLevel2Price.Location = new System.Drawing.Point(140, 161);
             this.tbxLevel2Price.Name = "tbxLevel2Price";
+            this.tbxLevel2Price.ReadOnly = true;
             this.tbxLevel2Price.Size = new System.Drawing.Size(111, 20);
             this.tbxLevel2Price.TabIndex = 10;
             // 
             // tbxLevel3Price
             // 
+            this.tbxLevel3Price.BackColor = System.Drawing.SystemColors.Window;
             this.tbxLevel3Price.Location = new System.Drawing.Point(140, 200);
             this.tbxLevel3Price.Name = "tbxLevel3Price";
+            this.tbxLevel3Price.ReadOnly = true;
             this.tbxLevel3Price.Size = new System.Drawing.Size(111, 20);
             this.tbxLevel3Price.TabIndex = 11;
             // 
@@ -157,6 +165,7 @@
             this.ckbxFloor.TabIndex = 13;
             this.ckbxFloor.Text = "Floor:";
             this.ckbxFloor.UseVisualStyleBackColor = true;
+            this.ckbxFloor.CheckedChanged += new System.EventHandler(this.ckbxFloor_CheckedChanged);
             // 
             // ckbxLevel2
             // 
@@ -165,8 +174,9 @@
             this.ckbxLevel2.Name = "ckbxLevel2";
             this.ckbxLevel2.Size = new System.Drawing.Size(64, 17);
             this.ckbxLevel2.TabIndex = 14;
-            this.ckbxLevel2.Text = "Level 2:";
+            this.ckbxLevel2.Text = "Level 1:";
             this.ckbxLevel2.UseVisualStyleBackColor = true;
+            this.ckbxLevel2.CheckedChanged += new System.EventHandler(this.ckbxLevel2_CheckedChanged);
             // 
             // ckbxLevel3
             // 
@@ -175,8 +185,9 @@
             this.ckbxLevel3.Name = "ckbxLevel3";
             this.ckbxLevel3.Size = new System.Drawing.Size(64, 17);
             this.ckbxLevel3.TabIndex = 15;
-            this.ckbxLevel3.Text = "Level 3:";
+            this.ckbxLevel3.Text = "Level 2:";
             this.ckbxLevel3.UseVisualStyleBackColor = true;
+            this.ckbxLevel3.CheckedChanged += new System.EventHandler(this.ckbxLevel3_CheckedChanged);
             // 
             // lblCalendar
             // 
@@ -208,6 +219,9 @@
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnAddEvent);
             this.Controls.Add(this.btnClear);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddEventForm";
             this.Text = "Add Event";
             this.ResumeLayout(false);

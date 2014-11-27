@@ -13,16 +13,14 @@ namespace Stadium_Ticketing
 {
     public partial class AddEventConfirmForm : Form
     {
-        private AddEventController mAEC;
-        public AddEventConfirmForm( AddEventController c)
-        {
-            mAEC = c;
+        
+        public AddEventConfirmForm()
+        {           
             InitializeComponent();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
-        {
-            mAEC.close();
+        {            
             this.Close();
         }
     }

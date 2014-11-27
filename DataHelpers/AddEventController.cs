@@ -35,7 +35,7 @@ namespace DataHelpers
         /// <param name="l2">Level 2</param>
         /// <param name="bp">Base price</param>
         /// <param name="mp">Max price</param>
-        public void addEvent(string name, DateTime date, bool flr, bool l1, bool l2, Decimal bp, Decimal mp)
+        public bool addEvent(string name, DateTime date, bool flr, bool l1, bool l2, Decimal bp, Decimal mp)
         {
             mEvent = new Event();
             //populate event with data from form
@@ -50,13 +50,11 @@ namespace DataHelpers
             //put event into database
             if (mDBC.save(mEvent))
             {
-                //show AddEventConfirmForm
-                //mAECF.show();
+                return true;
             }
             else
-            { 
-                //show AddEventForm cleared
-                close();
+            {
+                return false;
             }
         }
 

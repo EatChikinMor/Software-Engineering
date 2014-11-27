@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataHelpers;
+using DataHelpers.Objects;
 
 namespace Stadium_Ticketing
 {
@@ -15,21 +16,18 @@ namespace Stadium_Ticketing
     {
         #region private members
         private AddEventController mAEC;
+        private string mName;
         private bool mFloor = false;
         private bool mLevel1 = false;
         private bool mLevel2 = false;
-        private bool mLevel3 = false;
-        private DateTime mDate;
+        private DateTime mDate = DateTime.Now;
         Decimal mBtp; //base ticket price
         Decimal mFtp; //floor ticket price
-        Decimal mL1tp; //level 1
-        Decimal mL2tp; //level 2
-        Decimal mL3tp; //level 3
         #endregion
 
-        public AddEventForm(AddEventController c)
+        public AddEventForm()
         {
-            mAEC = c;
+            mAEC = new AddEventController();
             InitializeComponent();
         }
 
@@ -42,9 +40,11 @@ namespace Stadium_Ticketing
         {
             tbxBasePrice.Clear();
             tbxEventName.Clear();
-            tbxFloorPrice.Clear();
-            tbxLevel2Price.Clear();
-            tbxLevel3Price.Clear();
+            monthCalendar1.SelectionRange.Start = DateTime.Now;
+            monthCalendar1.SelectionRange.End = DateTime.Now;            
+            ckbxFloor.Checked = false;
+            ckbxLevel2.Checked = false;
+            ckbxLevel3.Checked = false;
         }
         #endregion
 
@@ -52,18 +52,21 @@ namespace Stadium_Ticketing
         private void btnAddEvent_Click(object sender, EventArgs e)
         {
             //get data from filled out form fields, call mAEC.addEvent(...)
-            string name = tbxEventName.Text;
-            DateTime date = mDate;
-
-            mAEC.addEvent(name, mDate, mFloor, mLevel1, mLevel2, mBtp, mFtp);
-            
+            bool success = mAEC.addEvent(mName, mDate, mFloor, mLevel1, mLevel2, mBtp, mFtp);
+            if (success)
+            {
+                AddEventConfirmForm confirm = new AddEventConfirmForm();
+                confirm.Show();
+            }
+            clear();
         }
         #endregion        
 
         #region btnLogout click activates logout sequence
         private void btnLogout_Click(object sender, EventArgs e)
         {
-
+            LoginController lc = new LoginController();
+            lc.logout(this);
         }
         #endregion
 
@@ -74,34 +77,13 @@ namespace Stadium_Ticketing
         }
         #endregion
 
-        #region upon changing base ticket price textbox, should autogenerate ticket prices
+        #region upon changing base ticket price textbox
         private void tbxBasePrice_TextChanged(object sender, EventArgs e)
         {
-            //Generate ticket price based on base ticket price
-            mBtp = Convert.ToDecimal(tbxBasePrice.Text);
-            //stupidly simple modifier multiplicands for generating prices
-            int mod1 = 6, mod2 = 4, mod3 = 2; 
-            mFtp = mBtp * mod1;
-            mL1tp = mFtp;
-            mL2tp = mBtp * mod2;
-            mL3tp = mBtp * mod3;
-
-            //fill associated text box if checkbox is checked
-            if (ckbxFloor.Checked)
+            if (tbxBasePrice.Text != "")
             {
-                mFloor = true;
-                mLevel1 = true;
-                tbxFloorPrice.Text = Convert.ToString(Math.Round(mFtp, 2));
-            }
-            if (ckbxLevel2.Checked)
-            {
-                mLevel2 = true;
-                tbxLevel2Price.Text = Convert.ToString(Math.Round(mL2tp, 2)); 
-            }
-            if (ckbxLevel3.Checked)
-            {
-                mLevel3 = true;
-                tbxLevel3Price.Text = Convert.ToString(Math.Round(mL3tp, 2));
+                mBtp = Convert.ToDecimal(decimal.Parse(tbxBasePrice.Text.ToString()));
+                mFtp = Math.Round(mBtp * 10, 2);
             }
         }
         #endregion
@@ -109,6 +91,61 @@ namespace Stadium_Ticketing
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
             mDate = monthCalendar1.SelectionStart;
-        }  
+        }
+
+        private void ckbxFloor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckbxFloor.Checked)
+            {
+                mFloor = true;
+                tbxFloorPrice.Text = "Floor pricing generated...";
+            }
+            else
+            {
+                mFloor = false;
+                tbxFloorPrice.Text = "";
+            }
+        }
+        private void ckbxLevel2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckbxLevel2.Checked)
+            {
+                mLevel1 = true;
+                tbxLevel2Price.Text = "Level 1 pricing generated...";
+            }
+            else 
+            {
+                mLevel1 = false;
+                tbxLevel2Price.Text = "";
+            }
+        }
+
+        private void ckbxLevel3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckbxLevel3.Checked)
+            {
+                mLevel2 = true;
+                tbxLevel3Price.Text = "Level 2 pricing generated...";
+            }
+            else 
+            {
+                mLevel2 = false;
+                tbxLevel3Price.Text = "";
+            }
+        }
+
+        private void tbxEventName_TextChanged(object sender, EventArgs e)
+        {
+            mName = tbxEventName.Text;
+        }
+
+        private void tbxBasePrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+                e.Handled = true;
+
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+                e.Handled = true;
+        }
     }
 }

@@ -60,6 +60,7 @@
             this.tbxPassword.Name = "tbxPassword";
             this.tbxPassword.Size = new System.Drawing.Size(100, 20);
             this.tbxPassword.TabIndex = 2;
+            this.tbxPassword.PasswordChar = '*';
             // 
             // lblUserName
             // 
@@ -83,7 +84,11 @@
             // 
             // cboDestination
             // 
+            this.cboDestination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboDestination.FormattingEnabled = true;
+            this.cboDestination.Items.AddRange(new object[] {
+            "Add Event",
+            "Returns"});
             this.cboDestination.Location = new System.Drawing.Point(204, 35);
             this.cboDestination.MaxDropDownItems = 2;
             this.cboDestination.Name = "cboDestination";

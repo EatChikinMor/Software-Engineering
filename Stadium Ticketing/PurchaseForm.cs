@@ -292,6 +292,10 @@ namespace Stadium_Ticketing
         private void lnkAdminLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             //Admin Login Form
+            LoginForm loginform = new LoginForm();
+            loginform.Show();
+            //this.Close();
+            //loginform.Show();
         }
 
         private void btnReturns_Click(object sender, EventArgs e)

@@ -3,89 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DataHelpers
 {
     public class LoginController
     {
         #region Private members
-        private string mUserName;
-        private string mPassword;
-        private string Result;
-        private int mDestination; //0=returns, 1=addEvent
+        private string lastUser = null;
         private TicketingDBConnector mDBC;
-        private AddEventController mAEC;
-        //private ReturnsController mRC;
         #endregion
 
-        //constructor
         public LoginController()
         {
             mDBC = new TicketingDBConnector();
         }
 
-        #region submit method called from LoginForm, gets data from DB
-        public void submit(string user, string pass, int dest = 0)
+        #region submit method called from LoginForm, gets stored password from DB
+        public void submit(string user, string pass, Form form)
         {
-            mUserName = user;
-            mPassword = pass;
-            Result = mDBC.getPass(user);
-            mDestination = dest;
+            //will use this when my DB query works
+            //string Result = mDBC.getPass(user);
+            //if (verify(Result, pass, user))
+            //    form.Show();
 
-            if (verify(Result))
-            {
-                switch (mDestination)
-                {
-                    case 0:
-                        //destroy LoginForm
-                        //show ReturnsForm
-                        break;
-                    case 1:
-                        //destroy LoginForm
-                        //show AddEventForm
-                        mAEC = new AddEventController();
-                        mAEC.show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            { 
-                //show LoginForm
-            }
-        }
-        #endregion
-
-        #region Logout method updates db session
-        public void logout()
-        {
-            if (mDBC.kill(mUserName))
-            {
-                //destroy requesting form
-                //show purchasing form
-            }
-            else
-            {
-                //show purchasing form
-            }
+            form.Show();
         }
         #endregion
 
         #region private verify method called to verify password
-        private bool verify(string dbPass)
+        private bool verify(string dbPass, string userPass, string userName)
         {
-            if (mPassword != null && dbPass != null)
+            if (dbPass == userPass)
             {
-                if (dbPass == mPassword)
-                {
-                    mDBC.setSession(mUserName);
-                    return true;
-                }
-                else return false;
+                mDBC.setSession(userName);
+                return true;
             }
             else
                 return false;
+        }
+        #endregion
+
+        #region Logout method updates db session
+        public void logout(Form form)
+        {
+            if (lastUser != null)
+                mDBC.kill(lastUser);
+
+            form.Close();            
         }
         #endregion
     }
