@@ -23,11 +23,11 @@ namespace DataHelpers
         public void submit(string user, string pass, Form form)
         {
             //will use this when my DB query works
-            //string Result = mDBC.getPass(user);
-            //if (verify(Result, pass, user))
-            //    form.Show();
+            string Result = mDBC.getPass(user);
+            if (verify(Result, pass, user))
+                form.Show();
 
-            form.Show();
+            //form.Show();
         }
         #endregion
 

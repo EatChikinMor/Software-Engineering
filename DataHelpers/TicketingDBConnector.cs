@@ -201,14 +201,22 @@ namespace DataHelpers
 
                     command.Parameters["@userName"].Value = userName;
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    //connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    
+                    //mPass = reader["pass"].ToString();    //trying various other methods to get result into mPass
+                    //mPass = reader.GetString(0);
+                    //mPass = reader.ToString();
+
+                    while (reader.Read()) //this never evaluates as true???
                     {
-                        mPass = Convert.ToString(reader.GetSqlString(0)); //stackoverflow is maybe being somewhat helpful?
+                        mPass = reader.GetString(0);
                     }
                 }
             }            
             return mPass; //mPass should be the password retrieved from the DB
         }
+
         public void setSession(string userName, bool truths)
         { 
             //updates DB entry to create/update session based on userName
@@ -233,15 +241,12 @@ namespace DataHelpers
                 }
             }
         }
-        public bool save(Event e) //**** It looks like you started to try what I had done. Mine are stored procedures where the code is handled database side.
-        {                         //**** In the database -> Programmability -> Stored Procedures. You can look at what I did by right clicking one and selecting
-                                  //**** Script As -> Create To -> New Window. After you look at it you can clear mine out and use it to write yours. 
-                                  //**** I've fixed to code below to work with one so that way you'll have less to sort out your first time.
-
+        public bool save(Event e)
+        {
             //updates DB to include passed in Event from AddEventController
             using (SqlConnection connection = new SqlConnection(_TicketingConnection))
             {
-                connection.Open(); //The connection has to happen first for reasons I forget
+                connection.Open();
                 using (SqlCommand command = new SqlCommand("saveEvent", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -253,8 +258,7 @@ namespace DataHelpers
                     command.Parameters.Add(new SqlParameter("@BasePrice", SqlDbType.Decimal));
                     command.Parameters.Add(new SqlParameter("@MaxPrice", SqlDbType.Decimal));
                     command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar));
-                    //command.Parameters.Add("@EventID", SqlDbType.Int).Value = e.ID; // I'm not certain as to whether you can daisy chain the
-                                                                                        // addition to the parameter list and the value assignment.
+
                     command.Parameters["@ID"].Value = e.ID;
                     command.Parameters["@Date"].Value = e.Date;
                     command.Parameters["@Floor"].Value = e.Floor;
@@ -265,7 +269,6 @@ namespace DataHelpers
                     command.Parameters["@Name"].Value = e.Name;
 
                     command.ExecuteNonQuery();
-                    //connection.Close(); The using block will dispose of the connection for you
                 }
             }            
             return true;
