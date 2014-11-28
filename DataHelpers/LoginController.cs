@@ -36,7 +36,7 @@ namespace DataHelpers
         {
             if (dbPass == userPass)
             {
-                mDBC.setSession(userName);
+                mDBC.setSession(userName, true);
                 return true;
             }
             else
@@ -48,7 +48,7 @@ namespace DataHelpers
         public void logout(Form form)
         {
             if (lastUser != null)
-                mDBC.kill(lastUser);
+                mDBC.setSession(lastUser, false);
 
             form.Close();            
         }
