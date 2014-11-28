@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataHelpers;
 using DataHelpers.Objects;
+using System.Text.RegularExpressions;
 
 namespace Stadium_Ticketing
 {
     public partial class AddEventForm : Form
     {
-        #region private members
         private AddEventController mAEC;
         private string mName;
         private bool mFloor = false;
         private bool mLevel1 = false;
-        private bool mLevel2 = false;
+        private bool mLevel2 = false;        
         private DateTime mDate = DateTime.Now;
         Decimal mBtp; //base ticket price
         Decimal mFtp; //floor ticket price
-        #endregion
+        private string mUser; //for logout functionality
 
-        public AddEventForm()
+        public AddEventForm(string user)
         {
             mAEC = new AddEventController();
+            mUser = user;
             InitializeComponent();
         }
 
-        #region btnClear click clears text boxes of user-entered text
         private void buttonClear_Click(object sender, EventArgs e)
         {
             clear();
@@ -46,38 +46,28 @@ namespace Stadium_Ticketing
             ckbxLevel2.Checked = false;
             ckbxLevel3.Checked = false;
         }
-        #endregion
 
-        #region btnAddEvent on click saves event data to database
         private void btnAddEvent_Click(object sender, EventArgs e)
         {
-            //get data from filled out form fields, call mAEC.addEvent(...)
-            bool success = mAEC.addEvent(mName, mDate, mFloor, mLevel1, mLevel2, mBtp, mFtp);
-            if (success)
+            if (mAEC.addEvent(mName, mDate, mFloor, mLevel1, mLevel2, mBtp, mFtp))
             {
                 AddEventConfirmForm confirm = new AddEventConfirmForm();
                 confirm.Show();
-            }
-            clear();
+                clear();
+            }            
         }
-        #endregion        
 
-        #region btnLogout click activates logout sequence
         private void btnLogout_Click(object sender, EventArgs e)
         {
             LoginController lc = new LoginController();
-            lc.logout(this);
+            lc.logout(this, mUser);
         }
-        #endregion
 
-        #region btnReturns click activates returns sequence
         private void btnReturns_Click(object sender, EventArgs e)
         {
 
         }
-        #endregion
 
-        #region upon changing base ticket price textbox
         private void tbxBasePrice_TextChanged(object sender, EventArgs e)
         {
             if (tbxBasePrice.Text != "")
@@ -86,11 +76,12 @@ namespace Stadium_Ticketing
                 mFtp = Math.Round(mBtp * 10, 2);
             }
         }
-        #endregion
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
+            
             mDate = monthCalendar1.SelectionStart;
+            
         }
 
         private void ckbxFloor_CheckedChanged(object sender, EventArgs e)
@@ -141,10 +132,15 @@ namespace Stadium_Ticketing
 
         private void tbxBasePrice_KeyPress(object sender, KeyPressEventArgs e)
         {
+            //allow only digits in tbxBasePrice, only one decimal point, and only two decimal places
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
                 e.Handled = true;
 
             if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+                e.Handled = true;
+
+            if (Regex.IsMatch(tbxBasePrice.Text, @"\.\d\d"))
                 e.Handled = true;
         }
     }
