@@ -13,26 +13,24 @@ namespace Stadium_Ticketing
 {
     public partial class LoginForm : Form
     {
-        #region Private members
         private LoginController mLC;
-        #endregion
+
         public LoginForm()
         {
             mLC = new LoginController();
             InitializeComponent();
         }
 
-        #region Login click
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string userName = null;
             string password = null;
-            Form form = new AddEventForm();
 
             if (tbxUserName.Text != null)
                 userName = tbxUserName.Text;
             if (tbxPassword.Text != null)
                 password = tbxPassword.Text;
+            Form form = new AddEventForm(userName);            
             //if (cboDestination.ValueMember != null)
             //{
             //    if (cboDestination.ValueMember == "Returns")
@@ -41,18 +39,13 @@ namespace Stadium_Ticketing
 
             if (userName != null && password != null)
             {
-                //send info to loginController
                 mLC.submit(userName, password, form);
-                //close login form
-                this.Close();
+                Close();
             }
             else
             { 
-                //clear login form, redisplay
-                tbxUserName.Text = "";
                 tbxPassword.Text = "";
             }
         }
-        #endregion
     }
 }

@@ -186,11 +186,11 @@ namespace DataHelpers
             }
         }
 
-        #region Code added by Judson for things he needs the DBC to do - none of this actually works
-        public string getPass(string userName)
+        #region Code added by Judson for things he needs the DBC to do
+        public string getPass(string userName) //get user's password from db
         {
             string mPass = "TemporaryPassword";
-            //execute query to set mPass based on userName -- get username's stored password from DB
+
             using (SqlConnection connection = new SqlConnection(_TicketingConnection))
             {
                 connection.Open();
@@ -201,26 +201,19 @@ namespace DataHelpers
 
                     command.Parameters["@userName"].Value = userName;
 
-                    //connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
-                    
-                    //mPass = reader["pass"].ToString();    //trying various other methods to get result into mPass
-                    //mPass = reader.GetString(0);
-                    //mPass = reader.ToString();
 
-                    while (reader.Read()) //this never evaluates as true???
+                    while (reader.Read())
                     {
                         mPass = reader.GetString(0);
                     }
                 }
             }            
-            return mPass; //mPass should be the password retrieved from the DB
+            return mPass;
         }
 
-        public void setSession(string userName, bool truths)
+        public bool setSession(string userName, bool truths) //update session table with login/out info
         { 
-            //updates DB entry to create/update session based on userName
-            //this did the same thing as the kill method, so i combined them
             DateTime mDate = DateTime.Now;
 
             using (SqlConnection connection = new SqlConnection(_TicketingConnection))
@@ -229,10 +222,12 @@ namespace DataHelpers
                 using (SqlCommand command = new SqlCommand("setSession", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@userID", SqlDbType.UniqueIdentifier));
                     command.Parameters.Add(new SqlParameter("@userName", SqlDbType.NVarChar));
                     command.Parameters.Add(new SqlParameter("@dateAndTime", SqlDbType.DateTime));
                     command.Parameters.Add(new SqlParameter("@sessionCurrent", SqlDbType.Bit));
 
+                    command.Parameters["@userID"].Value = getUserID(userName);
                     command.Parameters["@userName"].Value = userName;
                     command.Parameters["@dateAndTime"].Value = mDate;
                     command.Parameters["@sessionCurrent"].Value = truths;
@@ -240,17 +235,40 @@ namespace DataHelpers
                     command.ExecuteNonQuery();
                 }
             }
+            return true;
         }
-        public bool save(Event e)
+        private Guid getUserID(string userName) //get user's ID from db for session information
         {
-            //updates DB to include passed in Event from AddEventController
+            Guid mUserID = Guid.Empty;
+
+            using (SqlConnection connection = new SqlConnection(_TicketingConnection))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("getUserID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@userName", SqlDbType.NVarChar));
+
+                    command.Parameters["@userName"].Value = userName;
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        mUserID = (Guid)reader.GetValue(0);
+                    }
+                }
+            }
+            return mUserID;
+        }
+        public bool save(Event e) //save event to db
+        {
             using (SqlConnection connection = new SqlConnection(_TicketingConnection))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand("saveEvent", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@ID", SqlDbType.Int));
+                    command.Parameters.Add(new SqlParameter("@eID", SqlDbType.Int));
                     command.Parameters.Add(new SqlParameter("@Date", SqlDbType.DateTime));
                     command.Parameters.Add(new SqlParameter("@Floor", SqlDbType.Bit));
                     command.Parameters.Add(new SqlParameter("@Level1", SqlDbType.Bit));
@@ -259,7 +277,7 @@ namespace DataHelpers
                     command.Parameters.Add(new SqlParameter("@MaxPrice", SqlDbType.Decimal));
                     command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar));
 
-                    command.Parameters["@ID"].Value = e.ID;
+                    command.Parameters["@eID"].Value = e.ID;
                     command.Parameters["@Date"].Value = e.Date;
                     command.Parameters["@Floor"].Value = e.Floor;
                     command.Parameters["@Level1"].Value = e.Level1;
