@@ -203,6 +203,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 321);
+            this.ControlBox = false;
             this.Controls.Add(this.lblCalendar);
             this.Controls.Add(this.ckbxLevel3);
             this.Controls.Add(this.ckbxLevel2);
@@ -223,6 +224,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddEventForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Event";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -58,9 +58,9 @@
             // 
             this.tbxPassword.Location = new System.Drawing.Point(88, 76);
             this.tbxPassword.Name = "tbxPassword";
+            this.tbxPassword.PasswordChar = '*';
             this.tbxPassword.Size = new System.Drawing.Size(100, 20);
             this.tbxPassword.TabIndex = 2;
-            this.tbxPassword.PasswordChar = '*';
             // 
             // lblUserName
             // 
@@ -109,6 +109,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(356, 134);
+            this.ControlBox = false;
             this.Controls.Add(this.lblDestination);
             this.Controls.Add(this.cboDestination);
             this.Controls.Add(this.lblPassword);
@@ -117,6 +118,7 @@
             this.Controls.Add(this.tbxUserName);
             this.Controls.Add(this.btnLogin);
             this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoginForm";
             this.ResumeLayout(false);
             this.PerformLayout();
