@@ -35,6 +35,7 @@
             this.lblPassword = new System.Windows.Forms.Label();
             this.cboDestination = new System.Windows.Forms.ComboBox();
             this.lblDestination = new System.Windows.Forms.Label();
+            this.lblPassError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnLogin
@@ -104,12 +105,23 @@
             this.lblDestination.TabIndex = 6;
             this.lblDestination.Text = "Select one:";
             // 
+            // lblPassError
+            // 
+            this.lblPassError.AutoSize = true;
+            this.lblPassError.Location = new System.Drawing.Point(30, 60);
+            this.lblPassError.Name = "lblPassError";
+            this.lblPassError.Size = new System.Drawing.Size(158, 13);
+            this.lblPassError.TabIndex = 7;
+            this.lblPassError.Text = "Incorrect username or password";
+            this.lblPassError.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblPassError.Visible = false;
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(356, 134);
-            this.ControlBox = false;
+            this.Controls.Add(this.lblPassError);
             this.Controls.Add(this.lblDestination);
             this.Controls.Add(this.cboDestination);
             this.Controls.Add(this.lblPassword);
@@ -117,9 +129,12 @@
             this.Controls.Add(this.tbxPassword);
             this.Controls.Add(this.tbxUserName);
             this.Controls.Add(this.btnLogin);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LoginForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LoginForm";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -134,5 +149,6 @@
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.ComboBox cboDestination;
         private System.Windows.Forms.Label lblDestination;
+        private System.Windows.Forms.Label lblPassError;
     }
 }

@@ -16,14 +16,16 @@ namespace DataHelpers
             mDBC = new TicketingDBConnector();
         }
 
-        public void submit(string user, string pass, Form form)
+        public bool submit(string user, string pass, Form formNew, Form formClose)
         {
             string Result = mDBC.getPass(user);
             if (verify(Result, pass, user))
             {
-                
-                form.Show();
+                formClose.Close();
+                formNew.Show();
+                return true;
             }
+            return false;
         }
 
         private bool verify(string dbPass, string userPass, string userName)
