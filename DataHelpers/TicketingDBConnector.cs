@@ -292,5 +292,84 @@ namespace DataHelpers
             return true;
         }
         #endregion
+
+        public void StoreRequestReturns(Guid ticketNo)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_RequestReturns", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.Add(new SqlParameter("@ticketNo", SqlDbType.UniqueIdentifier));
+                    sqlCommand.Parameters["@ticketNo"].Value = ticketNo;
+
+                    sqlCommand.ExecuteNonQuery();
+                }
+                
+            }
+        }
+
+        public DataTable GetTickets()
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_Get_Requested_Returns", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+
+                    using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlAdapter.Fill(dt);
+                    }
+
+                    return dt;
+                }
+            }
+        }
+
+        public void StoreApprovedRequest(Guid approve_ticket)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_Approve_Returns", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.Add(new SqlParameter("@ticketNo", SqlDbType.UniqueIdentifier));
+                    sqlCommand.Parameters["@ticketNo"].Value = approve_ticket;
+
+                    sqlCommand.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        public void StoreRejectRequest(Guid reject_ticket)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
+            {
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand("USP_Reject_Returns", sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.Add(new SqlParameter("@ticketNo", SqlDbType.UniqueIdentifier));
+                    sqlCommand.Parameters["@ticketNo"].Value = reject_ticket;
+
+                    sqlCommand.ExecuteNonQuery();
+                }
+
+            }
+        }
+
     }
 }
