@@ -95,6 +95,7 @@
             this.cboDestination.Name = "cboDestination";
             this.cboDestination.Size = new System.Drawing.Size(121, 21);
             this.cboDestination.TabIndex = 5;
+            this.cboDestination.SelectedIndex = 0;
             // 
             // lblDestination
             // 

@@ -152,7 +152,7 @@
             this.btnReturns.TabIndex = 9;
             this.btnReturns.Text = "Click here";
             this.btnReturns.UseVisualStyleBackColor = true;
-
+            this.btnReturns.Click += new System.EventHandler(this.btnReturns_Click_1);
             // 
             // lblTicketPriceStatic
             // 

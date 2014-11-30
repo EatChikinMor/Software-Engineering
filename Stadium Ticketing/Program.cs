@@ -13,9 +13,9 @@ namespace Stadium_Ticketing
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-   //                   Application.Run(new frmTicketing()); 
-   //       Application.Run(new UserReturnForm());
-        Application.Run(new AdminReturnForm1());            
+            Application.Run(new frmTicketing()); 
+            //Application.Run(new UserReturnForm());
+            //Application.Run(new AdminReturnForm1());            
         }
     }
 }

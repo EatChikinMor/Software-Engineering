@@ -31,8 +31,8 @@ namespace Stadium_Ticketing
             if (tbxPassword.Text != null)
                 password = tbxPassword.Text;
             Form form = new AddEventForm(userName);
-            //if (cboDestination.ValueMember == "Returns")
-            //        form = new ReturnsForm();
+            if (cboDestination.SelectedIndex != 0)
+                form = new AdminReturnForm1(userName);
 
             if (userName != null && password != null)
             {

@@ -81,6 +81,7 @@
             this.logoutbtn.TabIndex = 4;
             this.logoutbtn.Text = "Logout";
             this.logoutbtn.UseVisualStyleBackColor = true;
+            this.logoutbtn.Click += new System.EventHandler(this.logoutbtn_Click);
             // 
             // button4
             // 
@@ -90,6 +91,7 @@
             this.button4.TabIndex = 5;
             this.button4.Text = "Add Event";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // AdminReturnForm1
             // 

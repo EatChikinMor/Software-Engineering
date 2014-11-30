@@ -294,17 +294,14 @@ namespace Stadium_Ticketing
             //Admin Login Form
             LoginForm loginform = new LoginForm();
             loginform.Show();
-            //this.Close();
-            //loginform.Show();
         }
-
-        private void btnReturns_Click(object sender, EventArgs e)
+        private void btnReturns_Click_1(object sender, EventArgs e)
         {
             //User Returns Form
+            UserReturnForm form = new UserReturnForm();
+            form.Show();
         }
 
-        #endregion
-
-       
+        #endregion               
     }
 }

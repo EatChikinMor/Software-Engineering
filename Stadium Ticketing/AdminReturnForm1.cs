@@ -11,11 +11,13 @@ namespace Stadium_Ticketing
     public partial class AdminReturnForm1 : Form
         //Admin Return Form
     {
-        public AdminReturnForm1()
+        public AdminReturnForm1(string userName)
         {
             InitializeComponent();
 
             ddlTicket_Populate();
+
+            mUser = userName;
         }
 
         #region Class Level Variables
@@ -24,7 +26,11 @@ namespace Stadium_Ticketing
 
         private ReturnController _RC = new ReturnController();
 
+        private LoginController _LC = new LoginController(); //for logout functionality
+
         private static DataTable _ReturnsTable = new DataTable();
+
+        private string mUser; //for addEvent functionality
 
         #endregion
 
@@ -61,19 +67,28 @@ namespace Stadium_Ticketing
         }
 
         #region Additional Functionality Navigation
-
-        private void logoutbtn_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
-            //press and return to Purchase Screen
-        {
-            // logout button
-            frmTicketing purchaseForm = new frmTicketing();
-            purchaseForm.Show();
-        }
-        
+                
         //Put in Add Event btn functionality 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //show addEvent form
+            AddEventForm form = new AddEventForm(mUser);
+            form.Show();
+            this.Close();
+        }
+        private void logoutbtn_Click(object sender, EventArgs e)
+        //press and return to Purchase Screen
+        {
+            //// logout button
+            //frmTicketing purchaseForm = new frmTicketing();
+            //purchaseForm.Show();
+            _LC.logout(this, mUser);
+        }
+
 
        
         #endregion
+
         
         
     }

@@ -65,7 +65,9 @@ namespace Stadium_Ticketing
 
         private void btnReturns_Click(object sender, EventArgs e)
         {
-
+            AdminReturnForm1 form = new AdminReturnForm1(mUser);
+            this.Close();
+            form.Show();
         }
 
         private void tbxBasePrice_TextChanged(object sender, EventArgs e)
