@@ -9,11 +9,11 @@ namespace DataHelpers
 {
     public class LoginController
     {
-        private TicketingDBConnector mDBC;
+        private DBConnector mDBC;
 
         public LoginController()
         {
-            mDBC = new TicketingDBConnector();
+            mDBC = new DBConnector();
         }
 
         public bool submit(string user, string pass, Form formNew, Form formClose)

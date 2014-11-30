@@ -11,12 +11,12 @@ namespace DataHelpers
     public class AddEventController
     {
         private Event mEvent;
-        private TicketingDBConnector mDBC;
+        private DBConnector mDBC;
 
         public AddEventController()
         {
             mEvent = new Event();
-            mDBC = new TicketingDBConnector();
+            mDBC = new DBConnector();
         }
 
         public bool addEvent(string name, DateTime date, bool flr, bool l1, bool l2, Decimal bp, Decimal mp)

@@ -8,7 +8,7 @@ using System.Windows.Forms; //temporary debugging use
 
 namespace DataHelpers
 {
-    public class TicketingDBConnector
+    public class DBConnector
     {
         string _TicketingConnection = ConfigurationManager.ConnectionStrings["Ticketing"].ToString();
 

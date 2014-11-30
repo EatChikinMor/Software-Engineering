@@ -22,7 +22,7 @@ namespace Stadium_Ticketing
 
         #region Class Level Variables
 
-        private TicketingDBConnector _TDH = new TicketingDBConnector();
+        private DBConnector _TDH = new DBConnector();
 
         private ReturnController _RC = new ReturnController();
 
@@ -57,6 +57,8 @@ namespace Stadium_Ticketing
             Guid selected = new Guid((((ComboboxItem)comboBox1.SelectedItem).Value).ToString());
             _RC.ApproveRequest(selected);
 
+            MessageBox.Show("Ticket return approved - Ticket removed from database.");
+
         }
 
         private void Rejectedbtn_Click(object sender, EventArgs e)
@@ -64,6 +66,8 @@ namespace Stadium_Ticketing
         {
             Guid selected = new Guid((((ComboboxItem)comboBox1.SelectedItem).Value).ToString());
             _RC.RejectRequest(selected);
+
+            MessageBox.Show("Ticket return request rejected.");
         }
 
         #region Additional Functionality Navigation

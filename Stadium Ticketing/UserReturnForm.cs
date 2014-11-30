@@ -19,7 +19,7 @@ namespace Stadium_Ticketing
 
         private ReturnController _RC = new ReturnController();
 
-        private TicketingDBConnector _TDH = new TicketingDBConnector();
+        private DBConnector _TDH = new DBConnector();
 
         private static DataTable _EventTable = new DataTable();
 

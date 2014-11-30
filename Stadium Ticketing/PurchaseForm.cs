@@ -14,7 +14,7 @@ namespace Stadium_Ticketing
 
         private PurchasingController _PC = new PurchasingController();
 
-        private TicketingDBConnector _TDH = new TicketingDBConnector();
+        private DBConnector _TDH = new DBConnector();
 
         private static DataTable _EventTable = new DataTable();
 
@@ -47,7 +47,7 @@ namespace Stadium_Ticketing
             for (int i = 0; i < _EventTable.Rows.Count; i++)
             {
                 ComboboxItem item = new ComboboxItem();
-                item.Text = _EventTable.Rows[i]["Name"].ToString() + " - " + String.Format("{0:h tt MM/dd/yy}", Convert.ToDateTime(_EventTable.Rows[i]["Date"]));
+                item.Text = _EventTable.Rows[i]["Name"].ToString() + " - " + String.Format("{0:MM/dd/yy}", Convert.ToDateTime(_EventTable.Rows[i]["Date"]));
                 item.Value = _EventTable.Rows[i]["ID"].ToString();
 
                 ddlEvent.Items.Add(item);

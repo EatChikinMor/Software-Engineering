@@ -14,7 +14,7 @@ namespace DataHelpers
 
         private Event selectedEvent = new Event();
 
-        private static TicketingDBConnector _TDH = new TicketingDBConnector();
+        private static DBConnector _TDH = new DBConnector();
 
         #endregion
 

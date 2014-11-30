@@ -59,7 +59,7 @@
             this.Rejectedbtn.Name = "Rejectedbtn";
             this.Rejectedbtn.Size = new System.Drawing.Size(75, 23);
             this.Rejectedbtn.TabIndex = 2;
-            this.Rejectedbtn.Text = "Rejected";
+            this.Rejectedbtn.Text = "Reject";
             this.Rejectedbtn.UseVisualStyleBackColor = true;
             this.Rejectedbtn.Click += new System.EventHandler(this.Rejectedbtn_Click);
             // 
@@ -69,7 +69,7 @@
             this.Approvebtn.Name = "Approvebtn";
             this.Approvebtn.Size = new System.Drawing.Size(75, 23);
             this.Approvebtn.TabIndex = 3;
-            this.Approvebtn.Text = "Approved";
+            this.Approvebtn.Text = "Approve";
             this.Approvebtn.UseVisualStyleBackColor = true;
             this.Approvebtn.Click += new System.EventHandler(this.Approvebtn_Click_1);
             // 

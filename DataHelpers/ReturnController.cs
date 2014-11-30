@@ -12,7 +12,7 @@ namespace DataHelpers
     {
         #region Class Level Variables
 
-        private TicketingDBConnector _TDH = new TicketingDBConnector();
+        private DBConnector _TDH = new DBConnector();
 
         #endregion
         public void SubmitRequest(Guid ticketNo)
