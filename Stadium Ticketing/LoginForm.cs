@@ -30,21 +30,17 @@ namespace Stadium_Ticketing
                 userName = tbxUserName.Text;
             if (tbxPassword.Text != null)
                 password = tbxPassword.Text;
-            Form form = new AddEventForm(userName);            
-            //if (cboDestination.ValueMember != null)
-            //{
-            //    if (cboDestination.ValueMember == "Returns")
+            Form form = new AddEventForm(userName);
+            //if (cboDestination.ValueMember == "Returns")
             //        form = new ReturnsForm();
-            //}
 
             if (userName != null && password != null)
             {
-                mLC.submit(userName, password, form);
-                Close();
-            }
-            else
-            { 
-                tbxPassword.Text = "";
+                if (!mLC.submit(userName, password, form, this))
+                { 
+                    tbxPassword.Text = "";
+                    lblPassError.Visible = true;
+                }
             }
         }
     }
