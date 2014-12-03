@@ -59,6 +59,11 @@ namespace Stadium_Ticketing
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            if (System.Windows.Forms.Application.OpenForms["frmTicketing"] != null)
+            {
+                (System.Windows.Forms.Application.OpenForms["frmTicketing"] as frmTicketing).ddlEvent_Populate();
+            }
+
             LoginController lc = new LoginController();
             lc.logout(this, mUser);
         }

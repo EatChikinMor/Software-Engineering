@@ -39,7 +39,7 @@ namespace Stadium_Ticketing
             lblTicketPrice.Text = lblTax.Text = lblTotal.Text = "";
         }
 
-        private void ddlEvent_Populate()
+        public void ddlEvent_Populate()
         {
             _EventTable = _TDH.GetEvents();
 
