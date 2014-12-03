@@ -10,7 +10,8 @@ namespace DataHelpers
 {
     public class DBConnector
     {
-        string _TicketingConnection = ConfigurationManager.ConnectionStrings["Ticketing"].ToString();
+        string _TicketingConnection = ConfigurationManager.ConnectionStrings["Stadium_Ticketing.Properties.Settings.Stadium_TicketingConnectionString"].ToString();
+        //string _TicketingConnection = ConfigurationManager.ConnectionStrings["Ticketing"].ToString();
 
         public DataTable GetEvents()
         {
@@ -35,7 +36,7 @@ namespace DataHelpers
                 }
                 catch (SqlException)
                 {
-                    MessageBox.Show("Could not connect to database. Check your connection or firewall settings. (GRU Firewall blocks connection) Execution Terminated.");
+                    MessageBox.Show("Could not query mdf. No SQL Server service running. Please install or launch SQL Server service. Execution Terminated.");
                     return dt;
                 }
             }
