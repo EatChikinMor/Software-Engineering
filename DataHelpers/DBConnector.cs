@@ -18,16 +18,24 @@ namespace DataHelpers
 
             using (SqlConnection sqlConnection = new SqlConnection(_TicketingConnection))
             {
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand("USP_Get_UpcomingEvents", sqlConnection))
+                try
                 {
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                    using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand))
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("USP_Get_UpcomingEvents", sqlConnection))
                     {
-                        sqlAdapter.Fill(dt);
-                    }
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
 
+                        using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand))
+                        {
+                            sqlAdapter.Fill(dt);
+                        }
+
+                        return dt;
+                    }
+                }
+                catch (SqlException)
+                {
+                    MessageBox.Show("Could not connect to database. Check your connection or firewall settings. (GRU Firewall blocks connection) Execution Terminated.");
                     return dt;
                 }
             }
